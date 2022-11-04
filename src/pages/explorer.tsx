@@ -93,7 +93,7 @@ export default function Explorer({ config }: IProps) {
             return res.data;
           });
           Promise.all(returns).then((values: QuorumBlock[]) => {
-            const slicedBlocks = values.slice(0, 4);
+            const slicedBlocks = values;
             const slicedTxns = values
               .filter((a) => a.transactions.length > 0)
               .map((a) => a.transactions)

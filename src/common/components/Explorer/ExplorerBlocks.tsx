@@ -17,6 +17,9 @@ import ExplorerBlockToast from "./ExplorerBlockToast";
 import { QuorumBlock } from "../../types/Explorer";
 import { motion } from "framer-motion";
 import getConfig from "next/config";
+import 'react-data-grid/lib/styles.css';
+import DataGrid from 'react-data-grid';
+
 const { publicRuntimeConfig } = getConfig();
 
 const BoxMotion = motion(Box);
@@ -67,16 +70,23 @@ export default function ExplorerBlocks({
     toastIdRef.current = toast({
       position: "top-right",
       isClosable: true,
-      duration: 10000,
+      duration: 10 * 60 * 1000,
       containerStyle: {
-        width: "600px",
+        width: "50vw",
         maxWidth: "100%",
+        maxHeight: "90vh",
+        overflow: "auto"
       },
       render: () => (
         <ExplorerBlockToast block={block} closeToast={closeToast} />
       ),
     });
   };
+
+  const columns = [
+    { key: 'number', name: 'Block Number' },
+    { key: 'timestamp', name: 'Mined At' }
+  ];
 
   return (
     <>
@@ -103,7 +113,7 @@ export default function ExplorerBlocks({
                 <Select maxW="20%" onChange={onSelectChange}>
                   <option value="10">10</option>
                   <option value="20">20</option>
-                  <option value="30">30</option>
+                  <option value="30">500</option>
                 </Select>
               </Tooltip>
               <FormControl as="form" onSubmit={onSubmit} maxW="50%">
@@ -118,7 +128,7 @@ export default function ExplorerBlocks({
         </Flex>
         <Container maxW={{ base: "container.sm", md: "container.xl" }}>
           <SimpleGrid columns={{ base: 1, md: 4 }} gap={{ base: "5", md: "6" }}>
-            <>
+            {/* <>
               {blocks.map((block, i) => (
                 <ExplorerBlockCard
                   key={i}
@@ -126,8 +136,9 @@ export default function ExplorerBlocks({
                   setIsPaused={setIsPaused}
                 />
               ))}
-            </>
+            </> */}
           </SimpleGrid>
+          <DataGrid columns={columns} rows={blocks} />
         </Container>
       </BoxMotion>
     </>

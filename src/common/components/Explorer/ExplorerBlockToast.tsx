@@ -1,6 +1,6 @@
-import { Box, Text, HStack, Spacer, Divider } from "@chakra-ui/react";
-import { Table, Tbody, Tr, Td } from "@chakra-ui/react";
+import { Box, Divider, HStack, Spacer, Table, Tbody, Td, Text, Tr } from "@chakra-ui/react";
 import { QuorumBlock } from "../../types/Explorer";
+import TreeView from "../Misc/Tree";
 
 interface IProps {
   block: QuorumBlock;
@@ -8,6 +8,7 @@ interface IProps {
 }
 
 export default function ExplorerBlockToast({ block, closeToast }: IProps) {
+  console.log('block', block)
   return (
     <Box color="white" p={3} bg="#2c56dd">
       <HStack>
@@ -67,6 +68,12 @@ export default function ExplorerBlockToast({ block, closeToast }: IProps) {
           <Tr fontSize="xs">
             <Td borderBottomColor={"#2c56dd"}>Txn Root</Td>
             <Td borderBottomColor={"#2c56dd"}>{block.transactionsRoot} </Td>
+          </Tr>
+          <Tr fontSize="xs">
+            <Td borderBottomColor={"#2c56dd"}>Transaction Hashes</Td>
+            <Td borderBottomColor={"#2c56dd"}>
+              <TreeView ar={block.transactions} titlePropName="hash" />
+            </Td>
           </Tr>
         </Tbody>
       </Table>

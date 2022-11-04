@@ -1,19 +1,12 @@
 import {
-  Button,
-  Text,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
+  Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text,
+  useDisclosure
 } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faExpand } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { QuorumBlock } from "../../types/Explorer";
+import TreeView from "../Misc/Tree";
 
 interface IProps {
   block: QuorumBlock;
@@ -30,6 +23,8 @@ export default function ExplorerBlockDetails({ block, setIsPaused }: IProps) {
     setIsPaused(false);
     onClose();
   };
+
+  console.log(parseInt(block.number, 16), block)
   return (
     <>
       <Button p={0} m={0} onClick={openModal}>
@@ -79,6 +74,9 @@ export default function ExplorerBlockDetails({ block, setIsPaused }: IProps) {
             <Text fontSize="xs" isTruncated textAlign="left">
               Tx Root: {block.transactionsRoot}
             </Text>
+            {block.transactions.length ? <Text fontSize="xs" isTruncated textAlign="left">
+              Transaction Hashes: <TreeView ar={block.transactions} titlePropName="hash" />
+            </Text> : null}
           </ModalBody>
 
           <ModalFooter>
