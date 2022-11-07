@@ -6,9 +6,13 @@ dayjs.extend(relativeTime)
 export const range = (start: number, stop: number, step = 1) => {
   stop = Math.max(0, stop);
   console.log(start, stop)
-  return Array(Math.ceil((stop - start) / step))
-    .fill(start)
-    .map((x, y) => x + y * step);
+  if (start > 0 && stop > 0) {
+    return Array(Math.ceil((stop - start) / step))
+      .fill(start)
+      .map((x, y) => x + y * step);
+  } else {
+    return [];
+  }
 }
 
 export function getSecsAgo(h: string) {

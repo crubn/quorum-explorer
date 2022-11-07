@@ -73,7 +73,7 @@ export default function ExplorerBlocks({
           blockNumber: "0x" + parseInt(blockSearch, 10).toString(16),
         }),
         baseURL: `${publicRuntimeConfig.QE_BASEPATH}`,
-        timeout: 2000,
+        timeout: 10000,
       });
       var block: QuorumBlock = res.data as QuorumBlock;
       toastIdRef.current = toast({
@@ -143,6 +143,7 @@ export default function ExplorerBlocks({
                 <Select maxW="20%" onChange={onSelectChange}>
                   <option value="10">10</option>
                   <option value="20">20</option>
+                  <option value="50">50</option>
                   <option value="100">100</option>
                 </Select>
               </Tooltip>
@@ -159,6 +160,19 @@ export default function ExplorerBlocks({
                 onChange={(e: any) => {
                   setScrollToRow(e.target.value)
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    if (Number(scrollToRow) < parseInt(blocks[0].number, 16)
+                      && Number(scrollToRow) > parseInt(blocks[blocks.length - 1].number, 16)) {
+                      let index = parseInt(blocks[0].number, 16) - Number(scrollToRow)
+                      gridRef.current!.scrollToRow(index)
+                      console.log('scrolling to:', index)
+                    } else {
+                      getNextRecords(scrollToRow, blocks.length, true)
+                      gridRef.current!.scrollToRow(0)
+                    }
+                  }
+                }}
               />
               <Button
                 onClick={(e: any) => {
@@ -168,10 +182,8 @@ export default function ExplorerBlocks({
                     gridRef.current!.scrollToRow(index)
                     console.log('scrolling to:', index)
                   } else {
-                    setTimeout(() => {
-                      getNextRecords(scrollToRow, blocks.length, true)
-                      gridRef.current!.scrollToRow(0)
-                    }, 1000);
+                    getNextRecords(scrollToRow, blocks.length, true)
+                    gridRef.current!.scrollToRow(0)
                   }
                 }}>Go</Button>
             </Flex>

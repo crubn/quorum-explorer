@@ -27,7 +27,7 @@ export default function ExplorerTxnDetails({ txn }: IProps) {
             <FontAwesomeIcon icon={faExpand as IconProp} />
           </Button>
         </PopoverTrigger>
-        <PopoverContent>
+        <PopoverContent width="80vw">
           <PopoverArrow />
           <PopoverCloseButton />
           <PopoverHeader>Txn: {txn.hash}</PopoverHeader>

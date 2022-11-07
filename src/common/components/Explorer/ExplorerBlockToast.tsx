@@ -72,7 +72,8 @@ export default function ExplorerBlockToast({ block, closeToast }: IProps) {
           <Tr fontSize="xs">
             <Td borderBottomColor={"#2c56dd"}>Transaction Hashes</Td>
             <Td borderBottomColor={"#2c56dd"}>
-              <TreeView ar={block.transactions} titlePropName="hash" />
+              <TreeView ar={block.transactions} titlePropName="hash"
+                bodyBackgroundColor="#0f41d8" headerBackgroundColor="#0033cc" />
             </Td>
           </Tr>
         </Tbody>

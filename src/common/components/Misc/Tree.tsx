@@ -3,14 +3,19 @@ import { camelCaseToString } from "../../Helpers";
 interface IProps {
     ar: object[];
     titlePropName: string;
+    bodyBackgroundColor: string;
+    headerBackgroundColor: string;
 }
 export default function TreeView(props: IProps) {
     console.log(props)
+
     return (
-        <Accordion allowMultiple backgroundColor="#0f41d8" width="100%" overflowWrap="anywhere" >
+        <Accordion allowMultiple backgroundColor={props.bodyBackgroundColor || "#ffffff"}
+            width="100%" overflowWrap="anywhere"
+            color={props.bodyBackgroundColor ? "#ffffff" : "#000000"}>
             {props.ar.map((item: any, i: number) =>
             (<AccordionItem key={item[props.titlePropName] + i} border="none">
-                <AccordionButton wordBreak="break-all" backgroundColor="#0033cc">
+                <AccordionButton wordBreak="break-all" backgroundColor={props.headerBackgroundColor || "#ffffff"}>
                     <Box flex='1' textAlign='left'>
                         {item[props.titlePropName]}
                     </Box>

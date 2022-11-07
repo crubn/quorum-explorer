@@ -48,6 +48,9 @@ export default function Explorer({ config }: IProps) {
   const blocksRef = useRef(explorer.blocks);
   blocksRef.current = explorer.blocks;
 
+  const isPausedRef = useRef(isPaused);
+  isPausedRef.current = isPaused;
+
   const onSelectChange = (e: any) => {
     e.preventDefault();
     controller.abort();
@@ -128,13 +131,15 @@ export default function Explorer({ config }: IProps) {
   const startInterval = () => {
 
     intervalRef.current = setInterval(() => {
-      if (isPaused !== true) {
-        if (Math.ceil((totalRef.current - parseInt(blocksRef.current[blocksRef.current.length - 1].number, 16)) / blocksRef.current.length) <= 1) {
-          nodeInfoHandler(explorer.selectedNode);
-          console.log("explorer > called for new info...");
-        } else {
-          console.log('blocksRef.current?.number', parseInt(blocksRef.current[0].number, 16))
-          getNextRecords(Number(parseInt(blocksRef.current[0].number, 16)), blocksRef.current.length)
+      if (isPausedRef.current !== true) {
+        if (blocksRef?.current) {
+          if (Math.ceil((totalRef.current - parseInt(blocksRef?.current[blocksRef?.current.length - 1]?.number, 16)) / blocksRef?.current.length) <= 1) {
+            nodeInfoHandler(explorer.selectedNode);
+            console.log("explorer > called for new info...");
+          } else {
+            console.log('blocksRef.current?.number', parseInt(blocksRef.current[0].number, 16))
+            getNextRecords(Number(parseInt(blocksRef.current[0].number, 16)), blocksRef.current.length)
+          }
         }
       }
     }, refresh5s);
@@ -155,7 +160,7 @@ export default function Explorer({ config }: IProps) {
       clearInterval(intervalRef?.current as NodeJS.Timeout);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [explorer.selectedNode, lookBackBlocks, isPaused]);
+  }, [explorer.selectedNode, lookBackBlocks]);
 
   // use useCallBack
   const getNextRecords = useCallback(
@@ -195,7 +200,7 @@ export default function Explorer({ config }: IProps) {
             }),
             signal: controller.signal,
             baseURL: `${publicRuntimeConfig.QE_BASEPATH}`,
-            // timeout: 2000,
+            timeout: 5000,
           });
           return res.data;
         });
