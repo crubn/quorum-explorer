@@ -50,3 +50,11 @@ main {
 }
 
 /* Scrollbar Modifications */
+
+.rdg-cell {
+  outline: 0 !important;
+}
+
+.fa-icon-css{
+  margin:10px;
+}

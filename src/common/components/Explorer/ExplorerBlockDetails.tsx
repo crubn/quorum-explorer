@@ -1,5 +1,5 @@
 import {
-  Button, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text,
+  Button, IconButton, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text,
   useDisclosure
 } from "@chakra-ui/react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -27,8 +27,8 @@ export default function ExplorerBlockDetails({ block, setIsPaused }: IProps) {
   console.log(parseInt(block.number, 16), block)
   return (
     <>
-      <Button p={0} m={0} onClick={openModal}>
-        <FontAwesomeIcon icon={faExpand as IconProp} />
+      <Button p={0} m={1} onClick={openModal} aria-label={""} height="30px" width="100%">
+        Show
       </Button>
       <Modal
         isOpen={isOpen}
