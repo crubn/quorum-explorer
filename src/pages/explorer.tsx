@@ -137,15 +137,15 @@ export default function Explorer({ config }: IProps) {
             nodeInfoHandler(explorer.selectedNode);
             console.log("explorer > called for new info...");
           } else {
-            console.log('blocksRef.current?.number', parseInt(blocksRef.current[0].number, 16))
-            getNextRecords(Number(parseInt(blocksRef.current[0].number, 16)), blocksRef.current.length)
+            console.log('blocksRef.current?.number', parseInt(blocksRef.current[0]?.number, 16))
+            getNextRecords(Number(parseInt(blocksRef.current[0]?.number, 16)), blocksRef.current.length)
           }
         }
       }
     }, refresh5s);
 
     totalIntervalId.current = setInterval(async () => {
-      if (Math.ceil((totalRef.current - parseInt(blocksRef.current[blocksRef.current.length - 1].number, 16)) / blocksRef.current.length) > 1) {
+      if (Math.ceil((totalRef.current - parseInt(blocksRef.current[blocksRef.current.length - 1]?.number, 16)) / blocksRef.current.length) > 1) {
         let t = await getLatestBlockNumber();
         setTotal(Number(t));
       }
@@ -168,6 +168,7 @@ export default function Explorer({ config }: IProps) {
 
       if (refreshInterval) {
         clearInterval(intervalRef?.current as NodeJS.Timeout);
+        clearInterval(totalIntervalId.current as NodeJS.Timeout);
       }
       let name = explorer.selectedNode;
 
@@ -235,7 +236,7 @@ export default function Explorer({ config }: IProps) {
   const handleSelectNode = (e: any) => {
     controller.abort();
     clearInterval(intervalRef.current as NodeJS.Timeout);
-    clearInterval(totalIntervalId.current);
+    clearInterval(totalIntervalId.current as NodeJS.Timeout);
     setExplorer({ ...explorer, selectedNode: e.target.value });
   };
 

@@ -163,7 +163,7 @@ export default function ExplorerBlocks({
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     if (Number(scrollToRow) < parseInt(blocks[0].number, 16)
-                      && Number(scrollToRow) > parseInt(blocks[blocks.length - 1].number, 16)) {
+                      && Number(scrollToRow) > parseInt(blocks[blocks.length - 1]?.number, 16)) {
                       let index = parseInt(blocks[0].number, 16) - Number(scrollToRow)
                       gridRef.current!.scrollToRow(index)
                       console.log('scrolling to:', index)
@@ -177,7 +177,7 @@ export default function ExplorerBlocks({
               <Button
                 onClick={(e: any) => {
                   if (Number(scrollToRow) < parseInt(blocks[0].number, 16)
-                    && Number(scrollToRow) > parseInt(blocks[blocks.length - 1].number, 16)) {
+                    && Number(scrollToRow) > parseInt(blocks[blocks.length - 1]?.number, 16)) {
                     let index = parseInt(blocks[0].number, 16) - Number(scrollToRow)
                     gridRef.current!.scrollToRow(index)
                     console.log('scrolling to:', index)

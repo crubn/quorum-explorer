@@ -19,12 +19,12 @@ export const NavItems: NavItem[] = [
     label: 'Explorer',
     icon: faCompass,
   },
-  // {
-  //   label: 'Contracts',
-  //   icon: faFileAlt,
-  // },
   {
-    label: 'Wallets',
-    icon: faWallet,
+    label: 'Contracts',
+    icon: faFileAlt,
   },
+  // {
+  //   label: 'Wallets',
+  //   icon: faWallet,
+  // },
 ];
