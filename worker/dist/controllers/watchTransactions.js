@@ -1,16 +1,39 @@
 "use strict";
 const axios = require('axios');
+const http = require('http');
+const Agent = require('agentkeepalive');
+const HttpsAgent = require('agentkeepalive').HttpsAgent;
 const { config: cnfg } = require('../helpers/load-config');
 const { TransactionsCollection: TCX } = require('../database/collections/transactions');
+const { NodesCollection: NCX } = require('../database/collections/nodes');
 const { range } = require('../helpers');
+const keepAliveAgent = new Agent({
+    maxSockets: 200,
+    maxFreeSockets: 200,
+    timeout: process.env.AXIOS_TIMEOUT,
+    freeSocketTimeout: process.env.AXIOS_TIMEOUT,
+    keepAliveMsecs: process.env.AXIOS_TIMEOUT,
+});
+const httpsKeepAliveAgent = new HttpsAgent({
+    maxSockets: 200,
+    maxFreeSockets: 200,
+    timeout: process.env.AXIOS_TIMEOUT,
+    freeSocketTimeout: process.env.AXIOS_TIMEOUT,
+    keepAliveMsecs: process.env.AXIOS_TIMEOUT,
+});
 class TransactionsController {
-    lastCheckedBlock = 1;
     nodes = cnfg.nodes;
-    init() {
-        this.lastCheckedBlock = 1;
-        // setInterval(() => {
-        this.nodes.forEach((node) => this.manageBlockFetching(node));
-        // }, 5000);
+    delay(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+    async init() {
+        while (true) {
+            for (const node of this.nodes) {
+                await this
+                    .manageBlockFetching(node);
+            }
+            await this.delay(10000);
+        }
     }
     /**
                * Fetch a block
@@ -28,7 +51,9 @@ class TransactionsController {
                     id: 1,
                 },
                 headers: { 'Content-Type': 'application/json' },
-                timeout: 1200000,
+                timeout: process.env.AXIOS_TIMEOUT,
+                httpAgent: keepAliveAgent,
+                httpsAgent: httpsKeepAliveAgent,
             }).then(function (response) {
                 console.log('FETCHED:', parseInt(response.data.result.number, 16));
                 resolve(response.data.result);
@@ -38,6 +63,7 @@ class TransactionsController {
         });
     }
     async manageBlockFetching(node) {
+        let lastCheckedBlock = await NCX.getLastBlockVisited(node.name);
         await this.fetchBlock(node.rpcUrl, [
             'latest',
             true,
@@ -45,45 +71,57 @@ class TransactionsController {
             .then(async (res) => {
             const quorumBlock = res;
             let currentBlock = parseInt(quorumBlock.number, 16);
-            const batches = Math.floor(currentBlock / 200);
-            this.lastCheckedBlock = currentBlock;
-            for (let index = 0; index < batches; index++) {
-                await new Promise((resolve, reject) => {
-                    const lastXBlockArray = range(currentBlock, 
-                    // 5450,
-                    // 5250,
-                    Math.min(currentBlock, currentBlock - 200), -1);
-                    console.log('lastXBlockArray', lastXBlockArray);
-                    const returns = lastXBlockArray.map(async (block) => {
-                        const res = await this.fetchBlock(node.rpcUrl, [
-                            '0x' + block.toString(16),
-                            true,
-                        ]);
-                        return res;
-                    });
-                    Promise.all(returns).then(async (values) => {
-                        const ar = [];
-                        values
-                            .filter((a) => a.transactions.length > 0)
-                            .forEach((a) => {
-                            ar.push(...a.transactions.map((b) => {
-                                b.createdAt = new Date().toISOString();
-                                b._id = b.hash;
-                                return b;
-                            }));
+            // let currentBlock = 1000;
+            const oldCurrentBlock = currentBlock;
+            if (currentBlock >= lastCheckedBlock) {
+                const batches = Math
+                    .ceil((currentBlock - lastCheckedBlock) / 200);
+                for (let index = 0; index < batches; index++) {
+                    await new Promise((resolve, reject) => {
+                        const lastXBlockArray = range(currentBlock, 
+                        // 5450,
+                        // 5250,
+                        Math.min(currentBlock, Math.max(lastCheckedBlock, currentBlock - 200)), -1);
+                        console.log('lastXBlockArray', lastXBlockArray);
+                        const returns = lastXBlockArray.map(async (block) => {
+                            const res = await this.fetchBlock(node.rpcUrl, [
+                                '0x' + block.toString(16),
+                                true,
+                            ]);
+                            return res;
                         });
-                        if (ar.length > 0) {
-                            await TCX
-                                .addTransactions(node.name, ar);
-                        }
-                        console.log('TOTAL Transactions:', ar.length);
-                        if (currentBlock - 200 > 0) {
-                            currentBlock = currentBlock - 200;
-                        }
-                        resolve(true);
+                        Promise.all(returns).then(async (values) => {
+                            const ar = [];
+                            values
+                                .filter((a) => a.transactions.length > 0)
+                                .forEach((a) => {
+                                ar.push(...a.transactions.map((b) => {
+                                    b.createdAt = new Date().toISOString();
+                                    b._id = b.hash;
+                                    return b;
+                                }));
+                            });
+                            if (ar.length > 0) {
+                                await TCX
+                                    .addTransactions(node.name, ar);
+                            }
+                            console.log('TOTAL Transactions:', ar.length);
+                            if (currentBlock - 200 > 0) {
+                                currentBlock = currentBlock - 200;
+                            }
+                            resolve(true);
+                        });
                     });
-                });
+                }
+                return oldCurrentBlock;
             }
+            else {
+                await TCX.clearTransactions(node.name);
+                return 0;
+            }
+        }).then(async (oldCurrentBlock) => {
+            lastCheckedBlock = oldCurrentBlock;
+            await NCX.setLastBlockVisited(node.name, oldCurrentBlock);
         })
             .catch((err) => {
             console.error(err.message);

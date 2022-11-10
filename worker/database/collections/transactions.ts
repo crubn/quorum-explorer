@@ -1,6 +1,6 @@
 const { MongoDB } = require('../../providers/mongo');
-const { TransactionCollectionName } = require('../schemas/transaction');
 
+const TCNN = 'Transactions';
 
 class TransactionsCollection {
   /**
@@ -8,9 +8,10 @@ class TransactionsCollection {
          */
   public static async addTransactions(node: string, transactionData: any) {
     return new Promise(async (resolve) => {
-      console.log('adding transactions', transactionData);
+      console.log('adding transactions', transactionData
+          .map((transaction: any) => parseInt(transaction.blockNumber, 16)));
       const conn = MongoDB.useDB(node);
-      conn.collection(TransactionCollectionName)
+      conn.collection(TCNN)
           .insertMany(transactionData, { ordered: false })
           .then(() => {
             console.info('New Transactions created');
@@ -18,6 +19,25 @@ class TransactionsCollection {
           })
           .catch((error: any) => {
             console.error(`Transactions creation failed: ${error}`);
+            resolve(false);
+          });
+    });
+  }
+
+  /**
+         * Clear transactions
+         */
+  public static async clearTransactions(node: string) {
+    return new Promise(async (resolve) => {
+      const conn = MongoDB.useDB(node);
+      conn.collection(TCNN)
+          .deleteMany({})
+          .then(() => {
+            console.info('All Transactions cleared');
+            resolve(true);
+          })
+          .catch((error: any) => {
+            console.error(`Transactions deletion failed: ${error}`);
             resolve(false);
           });
     });
