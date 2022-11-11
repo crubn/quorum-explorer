@@ -4,7 +4,7 @@ const NodeCollectionName = 'Nodes';
 
 const NodeSchema = new Schema(
     {
-      name: { type: String, required: true, unique: true },
+      node: { type: String, required: true, unique: true },
       lastBlockVisited: { type: String, required: true },
     },
     {
@@ -17,5 +17,8 @@ const NodeSchema = new Schema(
 
 const Nodes = model(NodeCollectionName, NodeSchema);
 
-module.exports= { NodeCollectionName, Nodes };
+const getNodeModelInDB = (myDB: any) => {
+  return myDB.model(NodeCollectionName, NodeSchema);
+};
+module.exports = { NodeCollectionName, Nodes, getNodeModelInDB };
 

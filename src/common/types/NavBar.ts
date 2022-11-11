@@ -20,6 +20,10 @@ export const NavItems: NavItem[] = [
     icon: faCompass,
   },
   {
+    label: 'Transactions',
+    icon: faCompass,
+  },
+  {
     label: 'Contracts',
     icon: faFileAlt,
   },

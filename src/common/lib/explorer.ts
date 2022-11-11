@@ -27,7 +27,11 @@ export function getTimeAgo(h: string) {
   const d = dayjs(ago).fromNow()
   return d;
 }
-
+export function getTimeAgoNormal(h: string) {
+  const ago: Date = new Date(h); // convert to decimal unix time
+  const d = dayjs(ago).fromNow()
+  return d;
+}
 
 export function abbreviateValidator(s: string) {
   const len = s.length;

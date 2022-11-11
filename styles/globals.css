@@ -53,8 +53,9 @@ main {
 
 .rdg-cell {
   outline: 0 !important;
+  text-align: center;
 }
 
-.fa-icon-css{
-  margin:10px;
+.fa-icon-css {
+  margin: 10px;
 }

@@ -1,5 +1,6 @@
+const { getNodeModelInDB: gNMIDB } =require('../schemas/node');
+
 const { MongoDB } = require('../../providers/mongo');
-const { NodeCollectionName: NCN } = require('../schemas/node');
 
 
 class NodesCollection {
@@ -8,7 +9,7 @@ class NodesCollection {
       // console.log('adding nodes', blockNumber
       //     .map((node: any) => parseInt(node.blockNumber, 16)));
       const conn = MongoDB.useDB('blocks');
-      conn.collection(NCN)
+      gNMIDB(conn)
           .updateOne(
               { node },
               {
@@ -34,7 +35,7 @@ class NodesCollection {
       // console.log('adding nodes', blockNumber
       //     .map((node: any) => parseInt(node.blockNumber, 16)));
       const conn = MongoDB.useDB('blocks');
-      conn.collection(NCN)
+      gNMIDB(conn)
           .findOne({ node })
           .then((doc: any) => {
             console.info('Last block visited fetched');

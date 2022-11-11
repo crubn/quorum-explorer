@@ -1,22 +1,17 @@
 "use strict";
 const axios = require('axios');
-const http = require('http');
 const Agent = require('agentkeepalive');
 const HttpsAgent = require('agentkeepalive').HttpsAgent;
 const { config: cnfg } = require('../helpers/load-config');
 const { TransactionsCollection: TCX } = require('../database/collections/transactions');
 const { NodesCollection: NCX } = require('../database/collections/nodes');
-const { range } = require('../helpers');
+const { range: rng } = require('../helpers');
 const keepAliveAgent = new Agent({
-    maxSockets: 200,
-    maxFreeSockets: 200,
     timeout: process.env.AXIOS_TIMEOUT,
     freeSocketTimeout: process.env.AXIOS_TIMEOUT,
     keepAliveMsecs: process.env.AXIOS_TIMEOUT,
 });
 const httpsKeepAliveAgent = new HttpsAgent({
-    maxSockets: 200,
-    maxFreeSockets: 200,
     timeout: process.env.AXIOS_TIMEOUT,
     freeSocketTimeout: process.env.AXIOS_TIMEOUT,
     keepAliveMsecs: process.env.AXIOS_TIMEOUT,
@@ -75,15 +70,17 @@ class TransactionsController {
             const oldCurrentBlock = currentBlock;
             if (currentBlock >= lastCheckedBlock) {
                 const batches = Math
-                    .ceil((currentBlock - lastCheckedBlock) / 200);
+                    .ceil((currentBlock - lastCheckedBlock) / Number(process
+                    .env.BATCH_LIMIT));
                 for (let index = 0; index < batches; index++) {
-                    await new Promise((resolve, reject) => {
-                        const lastXBlockArray = range(currentBlock, 
+                    await new Promise(async (resolve, reject) => {
+                        const lastXBlockArray = rng(currentBlock, 
                         // 5450,
                         // 5250,
-                        Math.min(currentBlock, Math.max(lastCheckedBlock, currentBlock - 200)), -1);
+                        Math.min(currentBlock, Math.max(lastCheckedBlock, currentBlock - Number(process.env.BATCH_LIMIT))), -1);
                         console.log('lastXBlockArray', lastXBlockArray);
-                        const returns = lastXBlockArray.map(async (block) => {
+                        const returns = await lastXBlockArray
+                            .map(async (block) => {
                             const res = await this.fetchBlock(node.rpcUrl, [
                                 '0x' + block.toString(16),
                                 true,
@@ -96,7 +93,8 @@ class TransactionsController {
                                 .filter((a) => a.transactions.length > 0)
                                 .forEach((a) => {
                                 ar.push(...a.transactions.map((b) => {
-                                    b.createdAt = new Date().toISOString();
+                                    b.createdAt = new Date(parseInt(a
+                                        .timestamp, 16) * 1000).toISOString();
                                     b._id = b.hash;
                                     return b;
                                 }));
@@ -106,8 +104,9 @@ class TransactionsController {
                                     .addTransactions(node.name, ar);
                             }
                             console.log('TOTAL Transactions:', ar.length);
-                            if (currentBlock - 200 > 0) {
-                                currentBlock = currentBlock - 200;
+                            if (currentBlock - Number(process.env.BATCH_LIMIT) > 0) {
+                                currentBlock = currentBlock -
+                                    Number(process.env.BATCH_LIMIT);
                             }
                             resolve(true);
                         });

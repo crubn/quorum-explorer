@@ -1,5 +1,5 @@
 "use strict";
-const { MongoDB } = require('../../providers/mongo');
+const { MongoDB: MDB } = require('../../providers/mongo');
 const TCNN = 'Transactions';
 class TransactionsCollection {
     /**
@@ -9,7 +9,7 @@ class TransactionsCollection {
         return new Promise(async (resolve) => {
             console.log('adding transactions', transactionData
                 .map((transaction) => parseInt(transaction.blockNumber, 16)));
-            const conn = MongoDB.useDB(node);
+            const conn = MDB.useDB(node);
             conn.collection(TCNN)
                 .insertMany(transactionData, { ordered: false })
                 .then(() => {
@@ -27,7 +27,7 @@ class TransactionsCollection {
            */
     static async clearTransactions(node) {
         return new Promise(async (resolve) => {
-            const conn = MongoDB.useDB(node);
+            const conn = MDB.useDB(node);
             conn.collection(TCNN)
                 .deleteMany({})
                 .then(() => {

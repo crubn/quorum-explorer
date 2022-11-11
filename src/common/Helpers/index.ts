@@ -1,3 +1,5 @@
+import copy from 'clipboard-copy';
+
 export const underscoreCaseToWords = (str: any) => {
   return str
     .split("_")
@@ -18,3 +20,13 @@ export const camelCaseToString = (camelCasedStr: any) => {
   const temp = camelCasedStr.replace(/([A-Z])/g, " $1");
   return temp.charAt(0).toUpperCase() + temp.slice(1);
 };
+
+export function copyToClipboard(text: string) {
+  copy(text).then((res) => {
+    if (text.length > 15) {
+      text = `${text?.slice(0, 15)}...`;
+    }
+    alert(`${text} copied successfully!`);
+  }).catch((err) => console.log('Could not copy text to clipboard'));
+  return null;
+}
