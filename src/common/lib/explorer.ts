@@ -3,6 +3,11 @@ import { QuorumBlock, QuorumTxn } from "../types/Explorer";
 var relativeTime = require('dayjs/plugin/relativeTime')
 dayjs.extend(relativeTime)
 
+declare module 'dayjs' {
+  interface Dayjs {
+    fromNow(withoutSuffix?: boolean): string
+  }
+}
 export const range = (start: number, stop: number, step = 1) => {
   stop = Math.max(0, stop);
   console.log('start, stop', start, stop)

@@ -1,6 +1,6 @@
-const { getNodeModelInDB: gNMIDB } =require('../schemas/node');
+const { getNodeModelInDB: gNMIDB } = require('../schemas/node');
 
-const { MongoDB } = require('../../providers/mongo');
+const { MongoDB: MDB2 } = require('../../providers/mongo');
 
 
 class NodesCollection {
@@ -8,7 +8,7 @@ class NodesCollection {
     return new Promise(async (resolve, reject) => {
       // console.log('adding nodes', blockNumber
       //     .map((node: any) => parseInt(node.blockNumber, 16)));
-      const conn = MongoDB.useDB('blocks');
+      const conn = MDB2.useDB('blocks');
       gNMIDB(conn)
           .updateOne(
               { node },
@@ -34,7 +34,7 @@ class NodesCollection {
     return new Promise(async (resolve, reject) => {
       // console.log('adding nodes', blockNumber
       //     .map((node: any) => parseInt(node.blockNumber, 16)));
-      const conn = MongoDB.useDB('blocks');
+      const conn = MDB2.useDB('blocks');
       gNMIDB(conn)
           .findOne({ node })
           .then((doc: any) => {

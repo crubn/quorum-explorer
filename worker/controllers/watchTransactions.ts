@@ -10,15 +10,15 @@ const { NodesCollection: NCX } =
 const { range: rng } = require('../helpers');
 
 const keepAliveAgent = new Agent({
-  timeout: process.env.AXIOS_TIMEOUT,
-  freeSocketTimeout: process.env.AXIOS_TIMEOUT,
-  keepAliveMsecs: process.env.AXIOS_TIMEOUT,
+  timeout: Number(process.env.AXIOS_TIMEOUT),
+  freeSocketTimeout: Number(process.env.AXIOS_TIMEOUT),
+  keepAliveMsecs: Number(process.env.AXIOS_TIMEOUT),
 });
 
 const httpsKeepAliveAgent = new HttpsAgent({
-  timeout: process.env.AXIOS_TIMEOUT,
-  freeSocketTimeout: process.env.AXIOS_TIMEOUT,
-  keepAliveMsecs: process.env.AXIOS_TIMEOUT,
+  timeout: Number(process.env.AXIOS_TIMEOUT),
+  freeSocketTimeout: Number(process.env.AXIOS_TIMEOUT),
+  keepAliveMsecs: Number(process.env.AXIOS_TIMEOUT),
 });
 
 class TransactionsController {
@@ -53,7 +53,7 @@ class TransactionsController {
           id: 1,
         },
         headers: { 'Content-Type': 'application/json' },
-        timeout: process.env.AXIOS_TIMEOUT,
+        timeout: Number(process.env.AXIOS_TIMEOUT),
         httpAgent: keepAliveAgent,
         httpsAgent: httpsKeepAliveAgent,
       }).then(function(response: any) {

@@ -1,4 +1,4 @@
-/* eslint-disable @next/next/link-passhref */
+
 import { Button, chakra, Divider, Flex, HStack } from "@chakra-ui/react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

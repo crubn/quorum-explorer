@@ -1,10 +1,10 @@
 import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box } from "@chakra-ui/react";
 import { camelCaseToString } from "../../Helpers";
 interface IProps {
-    ar: object[];
+    ar: any;
     titlePropName: string;
-    bodyBackgroundColor: string;
-    headerBackgroundColor: string;
+    bodyBackgroundColor?: any;
+    headerBackgroundColor?: any;
 }
 export default function TreeView(props: IProps) {
     console.log(props)

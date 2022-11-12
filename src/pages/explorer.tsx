@@ -32,8 +32,8 @@ export default function Explorer({ config }: IProps) {
   const { data: session, status } = useSession();
   const loading = status === "loading";
   const controller = new AbortController();
-  const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const totalIntervalId = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const intervalRef = useRef<ReturnType<any> | null>(null);
+  const totalIntervalId = useRef<ReturnType<any> | null>(null);
   const [explorer, setExplorer] = useState<IState>({
     selectedNode: config.nodes[0].name,
     blocks: [],
@@ -130,7 +130,7 @@ export default function Explorer({ config }: IProps) {
 
   const startInterval = () => {
 
-    intervalRef.current = setInterval(() => {
+    intervalRef.current = window.setInterval(() => {
       if (isPausedRef.current !== true) {
         if (blocksRef?.current) {
           if (Math.ceil((totalRef.current - parseInt(blocksRef?.current[blocksRef?.current.length - 1]?.number, 16)) / blocksRef?.current.length) <= 1) {
@@ -144,7 +144,7 @@ export default function Explorer({ config }: IProps) {
       }
     }, refresh5s);
 
-    totalIntervalId.current = setInterval(async () => {
+    totalIntervalId.current = window.setInterval(async () => {
       if (Math.ceil((totalRef.current - parseInt(blocksRef.current[blocksRef.current.length - 1]?.number, 16)) / blocksRef.current.length) > 1) {
         let t = await getLatestBlockNumber();
         setTotal(Number(t));
@@ -289,12 +289,7 @@ export default function Explorer({ config }: IProps) {
           setIsPaused={setIsPaused}
           getNextRecords={getNextRecords}
           lookBackBlocks={lookBackBlocks}
-          total={total}
-          abort={() => {
-            console.log('abort')
-            controller.abort()
-          }}
-        />
+          total={total}      />
         <Divider />
         <ExplorerTxns
           txns={explorer.transactions}

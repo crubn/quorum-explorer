@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/link-passhref */
 import { Box, Flex, Heading, HStack, Skeleton, VStack } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import Link from "next/link";

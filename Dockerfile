@@ -5,7 +5,7 @@ RUN apk add --no-cache --virtual .gyp \
   python3 \
   make \
   g++ \
-  && npm ci \
+  && npm ci --legacy-peer-deps \
   && apk del .gyp
 
 FROM node:lts-alpine as builder

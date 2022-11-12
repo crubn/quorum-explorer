@@ -25,10 +25,9 @@ interface IProps {
   url: string;
   onSelectChange: (e: any) => void;
   setIsPaused: any;
-  getNextRecords: (e: any) => void;
+  getNextRecords: any;
   lookBackBlocks: any;
   total: any;
-  intervalRef: any;
 }
 
 export default function ExplorerBlocks({
@@ -38,8 +37,7 @@ export default function ExplorerBlocks({
   setIsPaused,
   getNextRecords,
   lookBackBlocks,
-  total,
-  abort
+  total
 }: IProps) {
 
   const [isLoading, setIsLoading] = useState(false);
