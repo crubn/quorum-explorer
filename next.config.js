@@ -6,8 +6,12 @@ module.exports = removeImports({
     QE_BASEPATH: process.env.QE_BASEPATH,
   },
   experimental: { esmExternals: true },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   basePath: process.env.QE_BASEPATH,
   reactStrictMode: true,
+  output: 'standalone',
   async redirects() {
     if (this.basePath === "") {
       return [

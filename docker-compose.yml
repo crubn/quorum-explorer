@@ -9,6 +9,7 @@ services:
     container_name: quorum-explorer-app
     restart: unless-stopped
     env_file: .env.production
+    command: node ./.next/standalone/server.js 
     ports:
       - 25000:25000
     volumes:

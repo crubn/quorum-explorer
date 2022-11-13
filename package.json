@@ -2,11 +2,14 @@
   "name": "quorum-explorer-next",
   "version": "0.2.2",
   "private": true,
+  "main": "server.js",
   "scripts": {
     "dev": "next dev -p 25000",
     "build": "next build",
     "start": "next start -p 25000",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prod_start": "NODE_ENV=production node server.js",
+    "export": "next export"
   },
   "dependencies": {
     "@chakra-ui/react": "^1.8.6",
