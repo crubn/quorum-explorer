@@ -1,8 +1,15 @@
 const { connect, connection } = require('mongoose');
 
 class MongoDB {
-  public static async connect(dbName: string): Promise<boolean> {
+  static start: () => any;
+  static stop: () => any;
+
+  public static async connect(dbName: string,
+      triggerFunction: any, stopFunction: any): Promise<boolean> {
     console.log('process.env.MONGODB_HOST', process.env.MONGODB_HOST);
+
+    this.start = () => triggerFunction();
+    this.stop = () => stopFunction();
     return new Promise((resolve) => {
       connect(
           `mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}`,
@@ -16,7 +23,7 @@ class MongoDB {
             console.info(`Connected to MongoDB: ${dbName}`);
             resolve(true);
           })
-          .catch((error:any) => {
+          .catch((error: any) => {
             console
                 .error(`Error connecting to MongoDB: ${JSON.stringify(error)}`);
             resolve(false);
@@ -30,21 +37,24 @@ class MongoDB {
     connection.on('connecting', function() {
       console.info('Connecting to MongoDB');
     });
-    connection.on('error', function(error:any) {
+    connection.on('error', function(error: any) {
       console.error('Error in MongoDb connection');
       console.error(error);
     });
-    connection.on('connected', function() {
+    connection.once('connected', () => {
       console.info('MongoDB connected');
+      this.start();
     });
     connection.once('open', function() {
       console.info('MongoDB connection opened');
     });
-    connection.on('reconnected', function() {
+    connection.on('reconnected', () => {
       console.info('MongoDB reconnected');
+      this.start();
     });
-    connection.on('disconnected', function() {
+    connection.on('disconnected', () => {
       console.error('MongoDB disconnected');
+      this.stop();
     });
   }
 

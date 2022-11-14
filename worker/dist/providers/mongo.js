@@ -1,8 +1,12 @@
 "use strict";
 const { connect, connection } = require('mongoose');
 class MongoDB {
-    static async connect(dbName) {
+    static start;
+    static stop;
+    static async connect(dbName, triggerFunction, stopFunction) {
         console.log('process.env.MONGODB_HOST', process.env.MONGODB_HOST);
+        this.start = () => triggerFunction();
+        this.stop = () => stopFunction();
         return new Promise((resolve) => {
             connect(`mongodb://${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}`, {
                 user: process.env.MONGODB_USERNAME,
@@ -29,17 +33,20 @@ class MongoDB {
             console.error('Error in MongoDb connection');
             console.error(error);
         });
-        connection.on('connected', function () {
+        connection.once('connected', () => {
             console.info('MongoDB connected');
+            this.start();
         });
         connection.once('open', function () {
             console.info('MongoDB connection opened');
         });
-        connection.on('reconnected', function () {
+        connection.on('reconnected', () => {
             console.info('MongoDB reconnected');
+            this.start();
         });
-        connection.on('disconnected', function () {
+        connection.on('disconnected', () => {
             console.error('MongoDB disconnected');
+            this.stop();
         });
     }
     static useDB(dbName) {

@@ -9,33 +9,35 @@ services:
     container_name: quorum-explorer-app
     restart: unless-stopped
     env_file: .env.production
-    command: node ./.next/standalone/server.js 
+    command: node ./server.js
     ports:
       - 25000:25000
-    volumes:
-      - .:/app
     networks:
       - app-network   
     depends_on: 
       - quorum-explorer-db
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  
 
-  # quorum-explorer-worker:
-  #   build:
-  #     context: ./worker
-  #     dockerfile: Dockerfile
-  #   image: quorum-explorer-worker
-  #   container_name: quorum-explorer-worker
-  #   restart: unless-stopped
-  #   env_file: worker/prod.env
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - .:/home/node/app
-  #     - node_modules:/home/node/app/node_modules
-  #   networks:
-  #     - app-network
-  #   depends_on: 
-  #     - quorum-explorer-db
+  quorum-explorer-worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    image: quorum-explorer-worker
+    container_name: quorum-explorer-worker
+    restart: unless-stopped
+    env_file: worker/prod.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/home/node/app
+      - node_modules:/home/node/app/node_modules
+    networks:
+      - app-network
+    depends_on: 
+      - quorum-explorer-db
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
 
   quorum-explorer-db:
     image: mongo:6.0.2
@@ -50,7 +52,7 @@ services:
     volumes:
       - dbdata:/data/db
     networks:
-      - app-network   
+      - app-network  
 
 networks:
   app-network:

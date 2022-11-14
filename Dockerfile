@@ -27,6 +27,6 @@ COPY --from=deps /app/.next/standalone ./
 COPY --from=deps /app/.next/static ./.next/static
 COPY --from=deps /app/public ./public
 COPY --from=deps /app/.env.production ./.env
-RUN ls -a
-CMD ["node", "server.js"]
+RUN npm i dotenv
 EXPOSE 25000
+CMD ["node", "server.js"]

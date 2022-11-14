@@ -11,6 +11,7 @@ RUN npm install --legacy-peer-deps
 
 COPY tsconfig.json ./
 COPY . ./
+COPY prod.env ./.env
 
 RUN npm run build
 

@@ -9,32 +9,44 @@ const { NodesCollection: NCX } =
   require('../database/collections/nodes');
 const { range: rng } = require('../helpers');
 
+const timeout=process.env.AXIOS_TIMEOUT || 1200000;
 const keepAliveAgent = new Agent({
-  timeout: Number(process.env.AXIOS_TIMEOUT),
-  freeSocketTimeout: Number(process.env.AXIOS_TIMEOUT),
-  keepAliveMsecs: Number(process.env.AXIOS_TIMEOUT),
+  timeout: Number(timeout),
+  freeSocketTimeout: Number(timeout),
+  keepAliveMsecs: Number(timeout),
 });
 
 const httpsKeepAliveAgent = new HttpsAgent({
-  timeout: Number(process.env.AXIOS_TIMEOUT),
-  freeSocketTimeout: Number(process.env.AXIOS_TIMEOUT),
-  keepAliveMsecs: Number(process.env.AXIOS_TIMEOUT),
+  timeout: Number(timeout),
+  freeSocketTimeout: Number(timeout),
+  keepAliveMsecs: Number(timeout),
 });
 
 class TransactionsController {
   private nodes = cnfg.nodes;
+  private stopFlag = false;
 
   private delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
+  public manageStopFlag(ms: boolean) {
+    this.stopFlag = ms;
+  }
+
   async init() {
+    this.stopFlag=false;
     while (true) {
-      for (const node of this.nodes) {
-        await this
-            .manageBlockFetching(node);
+      if (this.stopFlag) {
+        console.log('Stopping Polling');
+        break;
+      } else {
+        for (const node of this.nodes) {
+          await this
+              .manageBlockFetching(node);
+        }
+        await this.delay(10000);
       }
-      await this.delay(10000);
     }
   }
   /**
@@ -53,7 +65,7 @@ class TransactionsController {
           id: 1,
         },
         headers: { 'Content-Type': 'application/json' },
-        timeout: Number(process.env.AXIOS_TIMEOUT),
+        timeout: Number(timeout),
         httpAgent: keepAliveAgent,
         httpsAgent: httpsKeepAliveAgent,
       }).then(function(response: any) {
@@ -108,8 +120,12 @@ class TransactionsController {
                       .filter((a: any) => a.transactions.length > 0)
                       .forEach((a: any) => {
                         ar.push(...a.transactions.map((b: any) => {
-                          b.createdAt = new Date(parseInt(a
-                              .timestamp, 16)* 1000).toISOString();
+                          try {
+                            b.createdAt = new Date(parseInt(a
+                                .timestamp, 16) * 1000).toISOString();
+                          } catch (error) {
+                            b.createdAt = new Date().toISOString();
+                          }
                           b._id = b.hash;
                           return b;
                         }));

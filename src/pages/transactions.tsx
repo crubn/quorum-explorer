@@ -69,7 +69,7 @@ export default function Transaction({ config }: IProps) {
             setTransactions(res?.data?.data.list)
             setTotal(res?.data?.data?.total)
           } else {
-            alert(res?.data?.data?.message)
+            console.log(res?.data)
           }
         })
         .catch((err) => {
