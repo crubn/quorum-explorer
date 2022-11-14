@@ -34,6 +34,9 @@ export default function TransactionDetails({ txn }: IProps) {
           <ModalCloseButton />
           <ModalBody>
           <Text fontSize="xs" textAlign="left">
+              Transaction Hash:&nbsp; {txn.hash}
+            </Text>
+          <Text fontSize="xs" textAlign="left">
               Block Number:&nbsp; {txn.blockNumber}
             </Text>
             <Text fontSize="xs" textAlign="left">

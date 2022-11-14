@@ -35,6 +35,10 @@ export default function Transaction({ config }: IProps) {
   const [total, setTotal] = useState(0);
   const [seed, setSeed] = useState(0);
 
+  const [sortOrder, setSortOrder] = useState(-1);
+  const [sortOrderBy, setSortOrderBy] = useState("createdAt");
+  const [searchX, setSearchX] = useState('');
+
   const onSelectChange = (e: any) => {
     e.preventDefault();
     setLookBackBlocks(e.target.value);
@@ -42,7 +46,7 @@ export default function Transaction({ config }: IProps) {
 
   // use useCallBack
   const nodeInfoHandler = useCallback(
-    async (x: any = seed, limit: any = lookBackBlocks, search: any = []) => {
+    async (x: any = seed, limit: any = lookBackBlocks, search: any = searchX, sort: any = [sortOrder, sortOrderBy]) => {
       console.log('seed', x, Number(total), (x !== 0 && total !== 0), x >= Number(total))
       if ((x !== 0 && total !== 0) && x >= Number(total)) {
         return;
@@ -50,8 +54,12 @@ export default function Transaction({ config }: IProps) {
       const needle: QuorumNode = getDetailsByNodeName(config, selectedNode);
       let str = "";
       if (search.length > 1) {
-        str = "&searchBy=" + search[0] + "&searchValue=" + search[1]
+        str += "&searchBy=" + search[0] + "&searchValue=" + search[1]
       }
+      if (sort.length > 1) {
+        str += "&sortOrder=" + sort[0] + "&sortBy=" + ((sortOrderBy === "blockNumber") ? "bNo" : sort[1])
+      }
+      console.log('str', str)
       axios({
         method: "GET",
         url: `/api/getTransactions?node=${needle.name}&seed=${x}&limit=${limit}${str}`,
@@ -77,13 +85,13 @@ export default function Transaction({ config }: IProps) {
         });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [config, lookBackBlocks, total]
+    [config, lookBackBlocks, total, searchX, sortOrder, sortOrderBy]
   );
 
   useEffect(() => {
     nodeInfoHandler();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lookBackBlocks]);
+  }, [lookBackBlocks, sortOrder, sortOrderBy]);
 
 
   const handleSelectNode = (e: any) => {
@@ -112,6 +120,12 @@ export default function Transaction({ config }: IProps) {
           seed={seed}
           lookBackBlocks={lookBackBlocks}
           url={getDetailsByNodeName(config, selectedNode).rpcUrl}
+          sortOrder={sortOrder}
+          setSortOrder={setSortOrder}
+          sortOrderBy={sortOrderBy}
+          setSortOrderBy={setSortOrderBy}
+          search={searchX}
+          setSearch={setSearchX}
         />
 
       </Container>

@@ -22,11 +22,9 @@ export const camelCaseToString = (camelCasedStr: any) => {
 };
 
 export function copyToClipboard(text: string) {
-  copy(text).then((res) => {
+ return copy(text).then((res) => {
     if (text.length > 15) {
       text = `${text?.slice(0, 15)}...`;
     }
-    alert(`${text} copied successfully!`);
   }).catch((err) => console.log('Could not copy text to clipboard'));
-  return null;
 }

@@ -1,4 +1,4 @@
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box } from "@chakra-ui/react";
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Text } from "@chakra-ui/react";
 import { camelCaseToString } from "../../Helpers";
 interface IProps {
     ar: any;
@@ -15,10 +15,12 @@ export default function TreeView(props: IProps) {
             color={props.bodyBackgroundColor ? "#ffffff" : "#000000"}>
             {props.ar.map((item: any, i: number) =>
             (<AccordionItem key={item[props.titlePropName] + i} border="none">
-                <AccordionButton wordBreak="break-all" backgroundColor={props.headerBackgroundColor || "#ffffff"}>
-                    <Box flex='1' textAlign='left'>
-                        {item[props.titlePropName]}
-                    </Box>
+                <AccordionButton wordBreak="break-all"
+                    boxShadow="none !important"
+                    backgroundColor={props.headerBackgroundColor || "#ffffff"}>
+                    <Text fontSize="xs" textAlign='left'>
+                        {(i + 1) + ". " + item[props.titlePropName]}
+                    </Text>
                     <AccordionIcon />
                 </AccordionButton>
                 <AccordionPanel p={4} width="100%" overflowWrap="anywhere">

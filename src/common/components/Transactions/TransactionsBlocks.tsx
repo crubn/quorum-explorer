@@ -15,6 +15,7 @@ import { getTimeAgoNormal } from "../../lib/explorer";
 import { QuorumTxn } from "../../types/Explorer";
 import CustomTable from "../CustomTable";
 import ExplorerTxnToast from "../Explorer/ExplorerTxnToast";
+import SortDropdown from "../Misc/SortDropdown";
 import TransactionDetails from "./TransactionDetails";
 
 const { publicRuntimeConfig } = getConfig();
@@ -29,6 +30,12 @@ interface IProps {
   seed: number;
   lookBackBlocks: number;
   url: string;
+  sortOrder: any;
+  setSortOrder: any;
+  sortOrderBy: any;
+  setSortOrderBy: any;
+  search: any;
+  setSearch: any;
 }
 
 export default function TransactionsBlocks({
@@ -38,10 +45,13 @@ export default function TransactionsBlocks({
   total,
   seed,
   lookBackBlocks,
-  url
+  url,
+  sortOrder, setSortOrder,
+  sortOrderBy, setSortOrderBy,
+  search, setSearch
 }: IProps) {
 
-  const [isLoading, setIsLoading] = useState(false);
+
   const [transactionSearch, setTransactionSearch] = useState("");
   const [searchByBlockNumber, setSearchByBlockNumber] = useState('');
   const toast = useToast();
@@ -54,6 +64,7 @@ export default function TransactionsBlocks({
       toast.close(toastIdRef.current);
     }
   };
+
 
   const onChange = (e: any) => {
     setTransactionSearch(e.target.value);
@@ -95,6 +106,67 @@ export default function TransactionsBlocks({
     { key: 'showDetails', name: 'More Info', width: "10%" },
   ];
 
+  const TableComponent = () => {
+    return (<CustomTable gridRef={gridRef}
+      columns={columns}
+      rows={blocks.map((block: any) => ({
+        ...block,
+        // bNo: parseInt(block.blockNumber, 16),
+        nonceX: parseInt(block.nonce, 16),
+        createdTime: getTimeAgoNormal(block.createdAt),
+        contractDeployment: block.to ? (<Tag
+          size='md'
+          borderRadius='full'
+          margin='8px'
+          variant='solid'
+          colorScheme='green'
+        >
+          <TagLabel>Transaction</TagLabel>
+        </Tag>) : (<Tag
+          size='md'
+          borderRadius='full'
+          margin='8px'
+          variant='solid'
+          colorScheme='yellow'
+        >
+          <TagLabel>Contract Deployment</TagLabel>
+        </Tag>),
+        showDetails: (<TransactionDetails txn={block} />),
+        hashComponent: (<Text isTruncated
+          as="p"
+          fontSize="sm"
+          cursor="pointer"
+          onClick={() => copyToClipboard(block.hash).then(() => {
+            toast({
+              title: 'Transaction hash copied',
+              status: 'success',
+              duration: 9000,
+              isClosable: true,
+              position: "top"
+            })
+          })
+          }
+        > {block.hash}</Text>)
+      }))}
+      // onScroll={handleScroll}
+      rowKeyGetter={(r: any) => {
+        return r.hash;
+      }}
+      className="rdg-light"
+      rowHeight={40}
+      style={{
+        width: '100%',
+        // overflowX: 'hidden'
+      }}
+      start={seed + 1}
+      end={seed + blocks.length}
+      total={total}
+      rowsPerPage={lookBackBlocks}
+      getNextRecords={getNextRecords}
+      paginationDirectionForward
+    />)
+  }
+  const MemoizedTableComponent = React.memo(TableComponent);
 
 
   return (
@@ -116,17 +188,17 @@ export default function TransactionsBlocks({
           <Text as="b" fontSize="lg">
             Blocks
           </Text>
-          <Container maxW="40%" m={0} p={0}>
+          <Container maxW="100%" m={0} p={0}>
             <Flex justifyContent="flex-end" gap="16px">
               <Tooltip label="Select number of blocks back to display data">
-                <Select maxW="20%" onChange={onSelectChange}>
+                <Select maxW="80px" onChange={onSelectChange}>
                   <option value="10">10</option>
                   <option value="20">20</option>
                   <option value="50">50</option>
                   <option value="100">100</option>
                 </Select>
               </Tooltip>
-              <FormControl as="form" onSubmit={onSubmit} maxW="100%">
+              <FormControl as="form" onSubmit={onSubmit} maxW="225px">
                 <Input
                   placeholder={"Search by transaction hash"}
                   onInput={onChange}
@@ -139,8 +211,10 @@ export default function TransactionsBlocks({
                 onChange={(e: any) => {
                   setSearchByBlockNumber(e.target.value)
                   if (e.target.value) {
-                    getNextRecords(undefined, undefined, ['blockNumber', "0x" +
-                      Number(e.target.value).toString(16)])
+                    let searchAr = ['blockNumber', "0x" +
+                      Number(e.target.value).toString(16)];
+                    setSearch(searchAr)
+                    getNextRecords(undefined, undefined, searchAr)
                   } else {
                     getNextRecords()
                   }
@@ -149,16 +223,25 @@ export default function TransactionsBlocks({
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
                     if (searchByBlockNumber) {
-                      getNextRecords(undefined, undefined, ['blockNumber', "0x" +
-                        Number(searchByBlockNumber).toString(16)])
+                      let searchAr = ['blockNumber', "0x" +
+                        Number(searchByBlockNumber).toString(16)];
+                      setSearch(searchAr)
+                      getNextRecords(undefined, undefined, searchAr)
                     }
                     else {
-                      getNextRecords()
+                      getNextRecords(undefined, undefined, ["", ""])
                     }
                   }
                 }}
+                width="210px"
               />
-
+              <SortDropdown
+                sortOrder={sortOrder}
+                setSortOrder={setSortOrder}
+                setSortOrderBy={setSortOrderBy}
+                sortOrderBy={sortOrderBy}
+                options={["hash", "blockNumber", "nonce", "createdAt"]}
+              />
             </Flex>
           </Container>
         </Flex>
@@ -174,56 +257,7 @@ export default function TransactionsBlocks({
               ))}
             </> */}
           </SimpleGrid>
-          <CustomTable gridRef={gridRef}
-            columns={columns}
-            rows={blocks.map((block: any) => ({
-              ...block,
-              bNo: parseInt(block.blockNumber, 16),
-              nonceX: parseInt(block.blockNumber, 16),
-              createdTime: getTimeAgoNormal(block.createdAt),
-              contractDeployment: block.to ? (<Tag
-                size='md'
-                borderRadius='full'
-                margin='8px'
-                variant='solid'
-                colorScheme='green'
-              >
-                <TagLabel>Transaction</TagLabel>
-              </Tag>) : (<Tag
-                size='md'
-                borderRadius='full'
-                margin='8px'
-                variant='solid'
-                colorScheme='yellow'
-              >
-                <TagLabel>Contract Deployment</TagLabel>
-              </Tag>),
-              showDetails: (<TransactionDetails txn={block} />),
-              hashComponent: (<Text isTruncated
-                as="p"
-                fontSize="sm"
-                cursor="pointer"
-                onClick={() => copyToClipboard(block.hash)
-                }
-              > {block.hash}</Text>)
-            }))}
-            // onScroll={handleScroll}
-            rowKeyGetter={(r: any) => {
-              return r.hash;
-            }}
-            className="rdg-light"
-            rowHeight={40}
-            style={{
-              width: '100%',
-              // overflowX: 'hidden'
-            }}
-            start={seed + 1}
-            end={seed + blocks.length}
-            total={total}
-            rowsPerPage={lookBackBlocks}
-            getNextRecords={getNextRecords}
-            paginationDirectionForward
-          />
+          <MemoizedTableComponent />
         </Container>
       </BoxMotion>
     </>

@@ -22,7 +22,7 @@ handler.get(async (req: any, res: any) => {
 
     let filterObj: any = {};
     if (searchBy && searchValue) {
-      filterObj[searchBy] = searchValue;
+      filterObj = { [searchBy]: { $regex: new RegExp('^' + searchValue), $options: 'i' } };
     }
 
     let sortObj: any = { createdAt: -1 };
@@ -39,6 +39,20 @@ handler.get(async (req: any, res: any) => {
     }
     let result = await db.collection(TCNN).aggregate([
       { '$match': filterObj },
+      {
+        $addFields: {
+          bNo: {
+            $function:
+            {
+              body: `function (blockNumber) {
+                return parseInt(blockNumber, 16);
+              }`,
+              args: ["$blockNumber"],
+              lang: "js"
+            }
+          },
+        }
+      },
       { $project: { _id: 0 } },
       { $sort: sortObj },
       {
