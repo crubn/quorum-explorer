@@ -38,7 +38,7 @@ export default function Footer() {
           >
             <ConsensysIcon boxSize="8em" />
             <ButtonGroup variant="ghost">
-              <Link isExternal href="https://twitter.com/CRUBNOfficial">
+              <Link isExternal href="https://twitter.com/trentialtech">
                 <IconButton
                   aria-label="Twitter"
                   icon={
@@ -49,7 +49,7 @@ export default function Footer() {
                   }
                 />
               </Link>
-              <Link
+              {/* <Link
                 isExternal
                 href="https://www.youtube.com/channel/UC5BOLjAQM2NMAhN14EKD47A"
               >
@@ -62,10 +62,10 @@ export default function Footer() {
                     />
                   }
                 />
-              </Link>
+              </Link> */}
               <Link
                 isExternal
-                href="https://www.linkedin.com/company/crubn/"
+                href="https://www.linkedin.com/company/trential/mycompany/"
               >
                 <IconButton
                   aria-label="LinkedIn"
@@ -82,7 +82,7 @@ export default function Footer() {
           <VStack mt={0}>
             <Box sx={{ display: "inline-flex" }}>
               <strong>Contact Us:&nbsp;</strong>
-              <a href="mailto: info@crubn.com">&nbsp; info@crubn.com&nbsp;</a>
+              <a href="mailto: info@trential.com">&nbsp; info@trential.com&nbsp;</a>
               |
               <a href="tel: +91-9149338300">&nbsp; +91-9149338300</a>
 
@@ -92,7 +92,7 @@ export default function Footer() {
               fontSize="sm"
               color="subtle"
             >
-              &copy; {new Date().getFullYear()} CRUBN. All
+              &copy; {new Date().getFullYear()} Trential. All
               rights reserved.
             </Text>
           </VStack>
