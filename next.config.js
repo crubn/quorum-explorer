@@ -7,7 +7,6 @@ module.exports = removeImports({
   },
   experimental: {
     esmExternals: true,
-    outputStandalone: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
