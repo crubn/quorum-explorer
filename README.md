@@ -31,7 +31,7 @@ It has not been designed for production use yet!
 
 - Use this command to start all three services together. They all use production env files.
   
-      `docker-compose --env-file ./.env.production up -d`
+      docker-compose --env-file ./.env.production up -d
 
 
 ## Prerequisites
