@@ -6,6 +6,7 @@ interface IProps {
     bodyBackgroundColor?: any;
     headerBackgroundColor?: any;
 }
+const excludeList = ['gas', 'gasPrice', 'value',];
 export default function TreeView(props: IProps) {
     console.log(props)
 
@@ -24,12 +25,14 @@ export default function TreeView(props: IProps) {
                     <AccordionIcon />
                 </AccordionButton>
                 <AccordionPanel p={4} width="100%" overflowWrap="anywhere">
-                    <ul style={{ margin: "0 1em" }}>{Object.keys(item).map((nested, j) => <li
-                        key={nested + i + "-" + j}
-                        style={{ width: "100%", overflowWrap: "anywhere" }}>
-                        <strong>{camelCaseToString(nested)}: </strong>
-                        {item[nested]}
-                    </li>)}</ul>
+                    <ul style={{ margin: "0 1em" }}>{Object.keys(item)
+                        .filter(e => !excludeList.includes(e))
+                        .map((nested, j) => <li
+                            key={nested + i + "-" + j}
+                            style={{ width: "100%", overflowWrap: "anywhere" }}>
+                            <strong>{camelCaseToString(nested)}: </strong>
+                            {item[nested]}
+                        </li>)}</ul>
 
                 </AccordionPanel>
             </AccordionItem>)

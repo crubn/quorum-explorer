@@ -1,35 +1,21 @@
-import { useEffect, useState } from "react";
 import {
-  FormControl,
-  FormLabel,
-  Button,
-  AccordionItem,
-  AccordionButton,
-  AccordionPanel,
-  AccordionIcon,
-  Box,
-  Input,
-  Text,
-  Spacer,
-  HStack,
-  VStack,
-  Center,
-  Select,
+  AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Center, FormControl,
+  FormLabel, HStack, Input, Select, Spacer, Text, VStack
 } from "@chakra-ui/react";
-import { faDatabase, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
-import { QuorumConfig } from "../../types/QuorumConfig";
-import {
-  CompiledContract,
-  SCDFunction,
-  buttonLoading,
-} from "../../types/Contracts";
-import { getDetailsByNodeName } from "../../lib/quorumConfig";
-import { getContractFunctions, prettyPrintToast } from "../../lib/contracts";
-import axios from "axios";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { faDatabase, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
 import { ethers } from "ethers";
 import getConfig from "next/config";
+import { useEffect, useState } from "react";
+import { getContractFunctions, prettyPrintToast } from "../../lib/contracts";
+import { getDetailsByNodeName } from "../../lib/quorumConfig";
+import {
+  buttonLoading, CompiledContract,
+  SCDFunction
+} from "../../types/Contracts";
+import { QuorumConfig } from "../../types/QuorumConfig";
 
 const { publicRuntimeConfig } = getConfig();
 interface IProps {
@@ -499,7 +485,7 @@ export default function ContractsInteract(props: IProps) {
                       leftIcon={
                         <FontAwesomeIcon icon={faDatabase as IconProp} />
                       }
-                      colorScheme="blue"
+                      colorScheme="brand"
                       onClick={() => handleRead(f)}
                       variant="solid"
                       minW={125}

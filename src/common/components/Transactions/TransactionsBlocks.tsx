@@ -119,7 +119,7 @@ export default function TransactionsBlocks({
           borderRadius='full'
           margin='8px'
           variant='solid'
-          colorScheme='green'
+          className="company_color"
         >
           <TagLabel>Transaction</TagLabel>
         </Tag>) : (<Tag
@@ -127,7 +127,7 @@ export default function TransactionsBlocks({
           borderRadius='full'
           margin='8px'
           variant='solid'
-          colorScheme='yellow'
+          colorScheme='green'
         >
           <TagLabel>Contract Deployment</TagLabel>
         </Tag>),

@@ -59,3 +59,8 @@ main {
 .fa-icon-css {
   margin: 10px;
 }
+
+.company_color {
+  background-color: #0170E0 !important;
+  color: #ffffff !important;
+}

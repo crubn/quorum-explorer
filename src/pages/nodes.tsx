@@ -82,7 +82,7 @@ export default function Nodes({ config }: IProps) {
         <FontAwesomeIcon
           icon={faCubes as IconProp}
           size="2x"
-          color="steelBlue"
+          color="#0170E0"
         />
       ),
     },

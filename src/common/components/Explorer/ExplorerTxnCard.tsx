@@ -31,7 +31,8 @@ export default function ExplorerTxnCard({ txn }: IProps) {
             borderRadius="md"
             borderWidth={1}
             boxShadow="md"
-            bg={txn.to === null ? "orange.300" : "green.400"}
+            className="company_color"
+            bg={txn.to === null ? "#38A169 !important" : "#0170E0"}
             minW="15%"
           >
             {txn.to === null ? (

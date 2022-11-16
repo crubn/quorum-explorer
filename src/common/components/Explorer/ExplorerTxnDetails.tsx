@@ -45,15 +45,6 @@ export default function ExplorerTxnDetails({ txn }: IProps) {
               To:&nbsp; {txn.to}
             </Text>
             <Text fontSize="xs" textAlign="left">
-              Gas:&nbsp; {txn.gas}
-            </Text>
-            <Text fontSize="xs" textAlign="left">
-              Gas Price:&nbsp; {txn.gasPrice}
-            </Text>
-            <Text fontSize="xs" textAlign="left">
-              Value:&nbsp; {txn.value}
-            </Text>
-            <Text fontSize="xs" isTruncated textAlign="left">
               Input:&nbsp; {txn.input}
             </Text>
             <Text fontSize="xs" textAlign="left">

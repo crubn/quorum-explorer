@@ -51,15 +51,6 @@ export default function ExplorerBlockDetails({ block, setIsPaused }: IProps) {
               Transactions: {block.transactions.length}
             </Text>
             <Text fontSize="xs" isTruncated textAlign="left">
-              Uncles: {block.uncles.length}
-            </Text>
-            <Text fontSize="xs" isTruncated textAlign="left">
-              Size: {parseInt(block.size, 16)}
-            </Text>
-            <Text fontSize="xs" isTruncated textAlign="left">
-              Gas Used: {parseInt(block.gasUsed, 16)}
-            </Text>
-            <Text fontSize="xs" isTruncated textAlign="left">
               Timestamp: {new Date(parseInt(block.timestamp, 16)).toString()}
             </Text>
             <Text fontSize="xs" isTruncated textAlign="left">
@@ -68,16 +59,13 @@ export default function ExplorerBlockDetails({ block, setIsPaused }: IProps) {
             <Text fontSize="xs" isTruncated textAlign="left">
               Receipt Root: {block.receiptsRoot}
             </Text>
-            <Text fontSize="xs" isTruncated textAlign="left">
-              Tx Root: {block.transactionsRoot}
-            </Text>
-            {block.transactions.length ? <Text fontSize="xs" isTruncated textAlign="left">
+            {block.transactions.length ? <Text fontSize="xs" textAlign="left">
               Transaction Hashes: <TreeView ar={block.transactions} titlePropName="hash" />
             </Text> : null}
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={closeModal}>
+            <Button colorScheme="brand" mr={3} onClick={closeModal}>
               Close
             </Button>
           </ModalFooter>

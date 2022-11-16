@@ -49,15 +49,6 @@ export default function TransactionDetails({ txn }: IProps) {
               To:&nbsp; {txn.to}
             </Text>
             <Text fontSize="xs" textAlign="left">
-              Gas:&nbsp; {txn.gas}
-            </Text>
-            <Text fontSize="xs" textAlign="left">
-              Gas Price:&nbsp; {txn.gasPrice}
-            </Text>
-            <Text fontSize="xs" textAlign="left">
-              Value:&nbsp; {txn.value}
-            </Text>
-            <Text fontSize="xs" textAlign="left">
               Input:&nbsp; {txn.input}
             </Text>
             <Text fontSize="xs" textAlign="left">
@@ -78,7 +69,7 @@ export default function TransactionDetails({ txn }: IProps) {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={closeModal}>
+            <Button colorScheme="brand" mr={3} onClick={closeModal}>
               Close
             </Button>
           </ModalFooter>

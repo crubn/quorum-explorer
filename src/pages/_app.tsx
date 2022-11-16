@@ -1,9 +1,7 @@
-import type { AppProps } from "next/app";
-import { useState } from "react";
-import { SessionProvider } from "next-auth/react";
-import { ChakraProvider } from "@chakra-ui/react";
-import { extendTheme } from "@chakra-ui/react";
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { createBreakpoints } from "@chakra-ui/theme-tools";
+import { SessionProvider } from "next-auth/react";
+import type { AppProps } from "next/app";
 import "../../styles/globals.css";
 import Layout from "../common/components/Misc/Layout";
 
@@ -17,6 +15,11 @@ function MyApp({ Component, pageProps, router }: AppProps) {
   });
   const theme = extendTheme({
     breakpoints,
+    colors: {
+      brand: {
+        500: '#0170E0',
+      }
+    }
   });
 
   return (
