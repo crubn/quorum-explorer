@@ -1,29 +1,26 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { GetServerSideProps } from "next";
-import type { Session } from "next-auth";
-import { useSession, getSession } from "next-auth/react";
-import AccessDenied from "../common/components/Misc/AccessDenied";
-import { Container } from "@chakra-ui/react";
-import PageHeader from "../common/components/Misc/PageHeader";
-import NodeOverview from "../common/components/Nodes/NodeOverview";
-import NodeDetails from "../common/components/Nodes/NodeDetails";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Container, useToast } from "@chakra-ui/react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
-  faPlay,
-  faStop,
-  faCubes,
-  faUsers,
-  faExchangeAlt,
+  faCubes, faExchangeAlt, faPlay,
+  faStop, faUsers
 } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from "axios";
+import { GetServerSideProps } from "next";
+import type { Session } from "next-auth";
+import { getSession, useSession } from "next-auth/react";
+import getConfig from "next/config";
+import { useCallback, useEffect, useRef, useState } from "react";
+import AccessDenied from "../common/components/Misc/AccessDenied";
+import PageHeader from "../common/components/Misc/PageHeader";
+import NodeDetails from "../common/components/Nodes/NodeDetails";
+import NodeOverview from "../common/components/Nodes/NodeOverview";
+import NodePeers from "../common/components/Nodes/NodePeers";
+import { refresh5s } from "../common/lib/common";
+import { configReader } from "../common/lib/getConfig";
+import { getDetailsByNodeName } from "../common/lib/quorumConfig";
 import { QuorumStatCard } from "../common/types/Nodes";
 import { QuorumConfig, QuorumNode } from "../common/types/QuorumConfig";
-import { getDetailsByNodeName } from "../common/lib/quorumConfig";
-import { refresh5s } from "../common/lib/common";
-import axios from "axios";
-import NodePeers from "../common/components/Nodes/NodePeers";
-import { configReader } from "../common/lib/getConfig";
-import getConfig from "next/config";
 const { publicRuntimeConfig } = getConfig();
 
 interface IState {
@@ -46,6 +43,7 @@ interface IProps {
 }
 
 export default function Nodes({ config }: IProps) {
+
   const { data: session, status } = useSession();
   const loading = status === "loading";
 
@@ -84,7 +82,7 @@ export default function Nodes({ config }: IProps) {
         <FontAwesomeIcon
           icon={faCubes as IconProp}
           size="2x"
-          color="steelBlue"
+          color="#0170E0"
         />
       ),
     },

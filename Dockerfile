@@ -1,29 +1,32 @@
-FROM node:lts-alpine as dependencies
+# Install dependencies only when needed
+FROM node:16-alpine AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY . .
+RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache --virtual .gyp \
   python3 \
   make \
   g++ \
-  && npm ci \
+  && npm ci --legacy-peer-deps \
   && apk del .gyp
 
-FROM node:lts-alpine as builder
-WORKDIR /app
-COPY . .
-COPY --from=dependencies /app/node_modules ./node_modules
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry during the build.
+ENV NEXT_TELEMETRY_DISABLED 1
+
 RUN npm run build
+RUN sed -i -e "s/const path = require('path')/const path = require('path')\nrequire('dotenv').config()/g" ./.next/standalone/server.js
 
-FROM node:lts-alpine as runner
-ENV NODE_ENV=production
+
+
+FROM node:16-alpine AS runner
 WORKDIR /app
-# If you are using a custom next.config.js file, uncomment this line.
-COPY --from=builder /app/.env.production ./
-COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/public ./public
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-
+COPY --from=deps /app/.next/standalone ./
+COPY --from=deps /app/.next/static ./.next/static
+COPY --from=deps /app/public ./public
+COPY --from=deps /app/.env.production ./.env
+RUN npm i dotenv
 EXPOSE 25000
-CMD ["npm", "run", "start"]
+CMD ["node", "server.js"]

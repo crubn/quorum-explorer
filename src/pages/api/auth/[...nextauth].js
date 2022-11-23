@@ -124,6 +124,7 @@ export default NextAuth({
     colorScheme: "light",
     logo: "https://cdn.consensys.net/uploads/Quorum_Logo_Blue_New.svg",
   },
+  secret: process.env.NEXTAUTH_SECRET,
   // callbacks: {
   //   async jwt({ token }) {
   //     token.userRole = "admin";

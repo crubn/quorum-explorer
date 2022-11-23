@@ -1,0 +1,14 @@
+{
+  "algorithm": "ibft",
+  "nodes": [
+    {
+      "name": "rpcnode",
+      "client": "goquorum",
+      "rpcUrl": "http://34.100.219.76:22000",
+      "privateTxUrl": ""
+    }
+  ],
+  "methods": {
+    "getBlockByNumber": "eth_getBlockByNumber"
+  }
+}

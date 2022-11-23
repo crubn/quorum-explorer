@@ -5,9 +5,15 @@ module.exports = removeImports({
     DISABLE_AUTH: process.env.DISABLE_AUTH,
     QE_BASEPATH: process.env.QE_BASEPATH,
   },
-  experimental: { esmExternals: true },
+  experimental: {
+    esmExternals: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   basePath: process.env.QE_BASEPATH,
   reactStrictMode: true,
+  output: 'standalone',
   async redirects() {
     if (this.basePath === "") {
       return [

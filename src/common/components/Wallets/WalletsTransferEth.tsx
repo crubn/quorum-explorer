@@ -1,36 +1,17 @@
-import { useState, useEffect } from "react";
-import { QuorumConfig, QuorumNode } from "../../types/QuorumConfig";
 import {
-  Divider,
-  Heading,
-  Box,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  useToast,
-  Tag,
-  HStack,
-  Text,
-  Center,
-  VStack,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
-  useDisclosure,
-  Code,
+  Box, Button, Center, Code, Divider, FormControl,
+  FormLabel, Heading, HStack, Input, Modal, ModalBody,
+  ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Tag, Text, useDisclosure, useToast, VStack
 } from "@chakra-ui/react";
-import { getDetailsByNodeName } from "../../lib/quorumConfig";
-import { motion } from "framer-motion";
-import { connectMetaMask, detectMetaMask } from "../../lib/connectMetaMask";
-import MetaMask from "../Misc/MetaMask";
-import { BigNumber, ethers } from "ethers";
 import axios from "axios";
+import { BigNumber, ethers } from "ethers";
+import { motion } from "framer-motion";
 import getConfig from "next/config";
+import { useEffect, useState } from "react";
+import { connectMetaMask, detectMetaMask } from "../../lib/connectMetaMask";
+import { getDetailsByNodeName } from "../../lib/quorumConfig";
+import { QuorumConfig, QuorumNode } from "../../types/QuorumConfig";
+import MetaMask from "../Misc/MetaMask";
 const { publicRuntimeConfig } = getConfig();
 
 const MotionBox = motion(Box);
@@ -338,7 +319,7 @@ export default function WalletsTransferEth(props: IProps) {
               onChange={handleAmount}
             />
             {/* <Button
-              colorScheme="blue"
+              colorScheme="brand"
               loadingText="Switching..."
               variant="solid"
               onClick={switchChain}
@@ -388,7 +369,7 @@ export default function WalletsTransferEth(props: IProps) {
           <ModalHeader>Confirmed Transaction</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            Block Number: <Code colorScheme="blue">{sentTx.blockNumber}</Code>
+            Block Number: <Code colorScheme="brand">{sentTx.blockNumber}</Code>
             <br />
             TX Hash: <Code colorScheme="purple">{sentTx.transactionHash}</Code>
             <br />
@@ -400,7 +381,7 @@ export default function WalletsTransferEth(props: IProps) {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="brand" mr={3} onClick={onClose}>
               Close
             </Button>
           </ModalFooter>

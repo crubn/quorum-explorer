@@ -5,6 +5,7 @@
 - [Quorum Explorer](#quorum-explorer)
   - [Table of Contents](#table-of-contents)
   - [Description](#description)
+  - [🐋Docker Instructions](#docker-instructions)
   - [Prerequisites](#prerequisites)
   - [Local Usage](#local-usage)
   - [Going into Production](#going-into-production)
@@ -19,6 +20,19 @@
 
 This is a lightweight explorer that is designed to get you up and running really quickly to give you an overview of yout chain.
 It has not been designed for production use yet!
+
+
+## 🐋Docker Instructions
+
+- There are 3 services in the `docker-compose.yml` file in the root, each for:
+   - Next JS App
+   - Worker Server (This will run continuously to fetch the new transactions, every 10 seconds)
+   - MongoDB Instance (This will store the transactions)
+
+- Use this command to start all three services together. They all use production env files.
+  
+      docker-compose --env-file ./.env.production up -d
+
 
 ## Prerequisites
 

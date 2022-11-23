@@ -1,0 +1,63 @@
+version: '3.7'
+
+services:
+  quorum-explorer-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: quorum-explorer-app
+    container_name: quorum-explorer-app
+    restart: unless-stopped
+    env_file: .env.production
+    command: node ./server.js
+    ports:
+      - 25000:25000
+    networks:
+      - app-network   
+    depends_on: 
+      - quorum-explorer-db
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  
+
+  quorum-explorer-worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile
+    image: quorum-explorer-worker
+    container_name: quorum-explorer-worker
+    restart: unless-stopped
+    env_file: worker/prod.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/home/node/app
+      - node_modules:/home/node/app/node_modules
+    networks:
+      - app-network
+    depends_on: 
+      - quorum-explorer-db
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+
+  quorum-explorer-db:
+    image: mongo:6.0.2
+    container_name: quorum-explorer-db
+    restart: unless-stopped
+    env_file: .env.local
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+    ports:
+      - 27018:27017
+    volumes:
+      - dbdata:/data/db
+    networks:
+      - app-network  
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  node_modules: 
+  dbdata:

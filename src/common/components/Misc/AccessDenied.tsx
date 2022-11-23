@@ -1,6 +1,6 @@
-import { signIn } from "next-auth/react";
-import { Container, Heading, Center, VStack, Button } from "@chakra-ui/react";
+import { Button, Center, Container, Heading, VStack } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 
 export default function AccessDenied() {
@@ -23,7 +23,7 @@ export default function AccessDenied() {
                 You must be signed in to view this page.
               </Link>
               <Button
-                colorScheme="blue"
+                colorScheme="brand"
                 // href="/api/auth/signin"
                 onClick={(e) => {
                   e.preventDefault();

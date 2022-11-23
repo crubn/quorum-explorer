@@ -1,15 +1,41 @@
+import dayjs from "dayjs";
 import { QuorumBlock, QuorumTxn } from "../types/Explorer";
+var relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime)
 
-export const range = (start: number, stop: number, step = 1) =>
-  Array(Math.ceil((stop - start) / step))
-    .fill(start)
-    .map((x, y) => x + y * step);
+declare module 'dayjs' {
+  interface Dayjs {
+    fromNow(withoutSuffix?: boolean): string
+  }
+}
+export const range = (start: number, stop: number, step = 1) => {
+  stop = Math.max(0, stop);
+  console.log('start, stop', start, stop)
+  if (start >= 0 && stop >= 0) {
+    return Array(Math.ceil((stop - start) / step))
+      .fill(start)
+      .map((x, y) => x + y * step);
+  } else {
+    return [];
+  }
+}
 
 export function getSecsAgo(h: string) {
   const ago: Date = new Date(parseInt(h, 16)); // convert to decimal unix time
   const now: Date = new Date();
   const d = Math.abs(ago.getTime() - now.getTime() / 1000);
   return Math.trunc(d);
+}
+
+export function getTimeAgo(h: string) {
+  const ago: Date = new Date(parseInt(h, 16) * 1000); // convert to decimal unix time
+  const d = dayjs(ago).fromNow()
+  return d;
+}
+export function getTimeAgoNormal(h: string) {
+  const ago: Date = new Date(h); // convert to decimal unix time
+  const d = dayjs(ago).fromNow()
+  return d;
 }
 
 export function abbreviateValidator(s: string) {
