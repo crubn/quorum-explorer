@@ -41,7 +41,7 @@ class TransactionsController {
         console.log('Stopping Polling');
         break;
       } else {
-        for (const node of this.nodes) {
+        for await(const node of this.nodes) {
           await this
               .manageBlockFetching(node);
         }
@@ -78,7 +78,7 @@ class TransactionsController {
   }
 
   public async manageBlockFetching(node: any) {
-    let lastCheckedBlock = await NCX.getLastBlockVisited(node.name);
+    let lastCheckedBlock = await NCX.getLastBlockVisited(node.rpcUrl);
     await this.fetchBlock(node.rpcUrl, [
       'latest',
       true,
@@ -133,7 +133,7 @@ class TransactionsController {
 
                   if (ar.length > 0) {
                     await TCX
-                        .addTransactions(node.name, ar);
+                        .addTransactions(node.rpcUrl, ar);
                   }
                   console.log('TOTAL Transactions:', ar.length);
                   if (currentBlock - Number(process.env.BATCH_LIMIT) > 0) {
@@ -146,12 +146,12 @@ class TransactionsController {
             }
             return oldCurrentBlock;
           } else {
-            await TCX.clearTransactions(node.name);
+            await TCX.clearTransactions(node.rpcUrl);
             return 0;
           }
         }).then(async (oldCurrentBlock) => {
           lastCheckedBlock = oldCurrentBlock;
-          await NCX.setLastBlockVisited(node.name, oldCurrentBlock);
+          await NCX.setLastBlockVisited(node.rpcUrl, oldCurrentBlock);
         })
         .catch((err) => {
           console.error(err.message);

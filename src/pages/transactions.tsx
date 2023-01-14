@@ -46,12 +46,16 @@ export default function Transaction({ config }: IProps) {
 
   // use useCallBack
   const nodeInfoHandler = useCallback(
-    async (x: any = seed, limit: any = lookBackBlocks, search: any = searchX, sort: any = [sortOrder, sortOrderBy]) => {
+    async (x: any = seed,
+      limit: any = lookBackBlocks,
+      search: any = searchX,
+      sort: any = [sortOrder, sortOrderBy],
+      currentNode = selectedNode) => {
       console.log('seed', x, Number(total), (x !== 0 && total !== 0), x >= Number(total))
       if ((x !== 0 && total !== 0) && x >= Number(total)) {
         return;
       }
-      const needle: QuorumNode = getDetailsByNodeName(config, selectedNode);
+      const needle: QuorumNode = getDetailsByNodeName(config, currentNode);
       let str = "";
       if (search.length > 1) {
         str += "&searchBy=" + search[0] + "&searchValue=" + search[1]
@@ -85,7 +89,7 @@ export default function Transaction({ config }: IProps) {
         });
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [config, lookBackBlocks, total, searchX, sortOrder, sortOrderBy]
+    [config, lookBackBlocks, total, searchX, sortOrder, sortOrderBy, selectedNode]
   );
 
   useEffect(() => {
@@ -97,6 +101,7 @@ export default function Transaction({ config }: IProps) {
   const handleSelectNode = (e: any) => {
     controller.abort();
     setSelectedNode(e.target.value);
+    nodeInfoHandler(undefined, undefined, undefined, undefined, e.target.value);
   };
 
   if (typeof window !== "undefined" && loading) return null;
