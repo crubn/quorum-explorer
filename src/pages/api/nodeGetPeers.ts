@@ -1,5 +1,5 @@
+import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ethApiCall } from "../../common/lib/ethApiCall";
 import apiAuth from "../../common/lib/authentication";
 
 export default async function handler(
@@ -16,22 +16,34 @@ export default async function handler(
   }
 
   try {
-    const adminPeerInfo = await ethApiCall(rpcUrl, "admin_peers");
+    const adminPeerInfo = await axios({
+      method: "post",
+      url: rpcUrl,
+      data: { "jsonrpc": "2.0", "method": "quorumPermission_orgList", "id": 1 },
+      headers: { "Content-Type": "application/json" },
+      timeout: 2000,
+    });
     adminPeerInfo.data.result.map((node: any) => {
       const constructPeers = {
-        name: "",
-        localAddress: "",
-        remoteAddress: "",
-        port: "",
-        id: "",
-        enode: "",
+        // name: "",
+        // localAddress: "",
+        // remoteAddress: "",
+        // port: "",
+        // id: "",
+        // enode: "",
+        orgId: '',
+        url: '',
+        ultimateParent: ''
       };
-      constructPeers["name"] = node.name;
-      constructPeers["localAddress"] = node.network.localAddress;
-      constructPeers["remoteAddress"] = node.network.remoteAddress;
-      constructPeers["port"] = node.port;
-      constructPeers["id"] = node.id;
-      constructPeers["enode"] = node.enode;
+      // constructPeers["name"] = node.name;
+      // constructPeers["localAddress"] = node.network.localAddress;
+      // constructPeers["remoteAddress"] = node.network.remoteAddress;
+      // constructPeers["port"] = node.port;
+      // constructPeers["id"] = node.id;
+      // constructPeers["enode"] = node.enode;
+      constructPeers["orgId"] = node.orgId;
+      constructPeers["url"] = node.url;
+      constructPeers["ultimateParent"] = node.ultimateParent;
       peerDetails.push(constructPeers);
     });
   } catch (e) {

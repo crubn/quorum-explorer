@@ -1,17 +1,8 @@
 import {
-  Text,
-  Container,
-  Flex,
-  TableContainer,
-  Table,
-  TableCaption,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-  Tooltip,
-  Center,
+  Center, Container,
+  Flex, Table,
+  TableCaption, TableContainer, Tbody,
+  Td, Text, Th, Thead, Tooltip, Tr
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 const MotionContainer = motion(Container);
@@ -44,68 +35,86 @@ export default function NodePeers({ peers }: IProps) {
               <Thead>
                 <Tr>
                   <Th>
-                    <Center>ID</Center>
+                    <Center>Org ID</Center>
                   </Th>
                   <Th>
-                    <Center>E-Node</Center>
+                    <Center>Ultimate Parent</Center>
                   </Th>
                   <Th>
-                    <Center>Local Address</Center>
+                    <Center>ENODE URL</Center>
+                  </Th>
+                  {/* <Th>
+                    <Center>Org ID</Center>
                   </Th>
                   <Th>
                     <Center>Remote-Address</Center>
-                  </Th>
+                  </Th> */}
                 </Tr>
               </Thead>
               <Tbody>
                 {peers.map((peer: any) => {
                   return (
-                    <>
-                      <Tr>
+                      <Tr key={peer.orgId}>
                         <Td>
                           <Center>
-                            <Tooltip label={peer.id} placement="auto">
+                            <Tooltip label={peer.orgId} placement="auto">
                               <MotionText
-                                key={peer.id}
+                                key={peer.orgId}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 1 }}
                                 end={{ opacity: 0 }}
                                 isTruncated
                               >
-                                {peer.id}
+                                {peer.orgId}
                               </MotionText>
                             </Tooltip>
                           </Center>
                         </Td>
                         <Td>
                           <Center>
-                            <Tooltip label={peer.enode} placement="auto">
+                            <Tooltip label={peer.ultimateParent} placement="auto">
                               <MotionText
-                                key={peer.enode}
+                                key={peer.ultimateParent}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 1 }}
                                 end={{ opacity: 0 }}
                                 isTruncated
                               >
-                                {peer.enode}
+                                {peer.ultimateParent}
                               </MotionText>
                             </Tooltip>
                           </Center>
                         </Td>
                         <Td>
                           <Center>
-                            <Tooltip label={peer.localAddress} placement="auto">
+                            <Tooltip label={peer.url} placement="auto">
                               <MotionText
-                                key={peer.localAddress}
+                                key={peer.url}
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 1 }}
                                 end={{ opacity: 0 }}
                                 isTruncated
                               >
-                                {peer.localAddress}
+                                {peer.url}
+                              </MotionText>
+                            </Tooltip>
+                          </Center>
+                        </Td>
+                        {/* <Td>
+                          <Center>
+                            <Tooltip label={peer.orgId} placement="auto">
+                              <MotionText
+                                key={peer.orgId}
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ duration: 1 }}
+                                end={{ opacity: 0 }}
+                                isTruncated
+                              >
+                                {peer.orgId}
                               </MotionText>
                             </Tooltip>
                           </Center>
@@ -128,9 +137,8 @@ export default function NodePeers({ peers }: IProps) {
                               </MotionText>
                             </Tooltip>
                           </Center>
-                        </Td>
+                        </Td> */}
                       </Tr>
-                    </>
                   );
                 })}
               </Tbody>

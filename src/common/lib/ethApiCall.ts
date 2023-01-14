@@ -35,7 +35,8 @@ const allowedMethods = [
 export async function ethApiCall(
   url: string,
   method: string,
-  params: any[] = []
+  params: any[] = [],
+  id=1
 ) {
   // Verify that url and methods cannot be subject to a server-side request forgery
   const getConf = JSON.parse(await configReader());
@@ -52,7 +53,7 @@ export async function ethApiCall(
       jsonrpc: "2.0",
       method: method,
       params: params,
-      id: 1,
+      id,
     },
     headers: { "Content-Type": "application/json" },
     timeout: 2000,
