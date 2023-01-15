@@ -78,7 +78,7 @@ class TransactionsController {
   }
 
   public async manageBlockFetching(node: any) {
-    let lastCheckedBlock = await NCX.getLastBlockVisited(node.rpcUrl);
+    let lastCheckedBlock = await NCX.getLastBlockVisited(node.name);
     await this.fetchBlock(node.rpcUrl, [
       'latest',
       true,
@@ -133,7 +133,7 @@ class TransactionsController {
 
                   if (ar.length > 0) {
                     await TCX
-                        .addTransactions(node.rpcUrl, ar);
+                        .addTransactions(node.name, ar);
                   }
                   console.log('TOTAL Transactions:', ar.length);
                   if (currentBlock - Number(process.env.BATCH_LIMIT) > 0) {
@@ -146,12 +146,12 @@ class TransactionsController {
             }
             return oldCurrentBlock;
           } else {
-            await TCX.clearTransactions(node.rpcUrl);
+            await TCX.clearTransactions(node.name);
             return 0;
           }
         }).then(async (oldCurrentBlock) => {
           lastCheckedBlock = oldCurrentBlock;
-          await NCX.setLastBlockVisited(node.rpcUrl, oldCurrentBlock);
+          await NCX.setLastBlockVisited(node.name, oldCurrentBlock);
         })
         .catch((err) => {
           console.error(err.message);
