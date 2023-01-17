@@ -39,7 +39,6 @@ export default function ExplorerBlocks({
     url,
     config
 }: IProps) {
-    console.log('config', config)
     const [isLoading, setIsLoading] = useState(false);
     const [txnData, setTxnData] = useState<any>(null);
     const [explorer, setExplorer] = useState<IState>({
