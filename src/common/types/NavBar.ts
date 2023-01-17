@@ -16,7 +16,7 @@ export const NavItems: NavItem[] = [
   //   icon: faUsers
   // },
   {
-    label: 'Explorer',
+    label: 'Blocks',
     icon: faCompass,
   },
   {

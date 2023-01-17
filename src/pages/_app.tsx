@@ -31,7 +31,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
       refetchOnWindowFocus={true}
     >
       <ChakraProvider theme={theme}>
-        <title>Quorum Explorer</title>
+        <title>Vishrambh Network</title>
         <Layout>
           <Component {...pageProps} />
         </Layout>

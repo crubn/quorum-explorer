@@ -278,7 +278,7 @@ export default function Explorer({ config }: IProps) {
     <>
       <Container maxW={{ base: "container.sm", md: "container.xl" }} p={0}>
         <PageHeader
-          title="Explorer"
+          title="Blocks"
           config={config}
           selectNodeHandler={handleSelectNode}
         />

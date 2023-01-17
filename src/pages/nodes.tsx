@@ -1,4 +1,4 @@
-import { Container, useToast } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
   faCubes, faExchangeAlt, faPlay,
@@ -158,7 +158,7 @@ export default function Nodes({ config }: IProps) {
         });
       await axios({
         method: "POST",
-        url: `/api/nodeGetPeers`,
+        url: `/api/nodeGetNodeList`,
         headers: {
           "Content-Type": "application/json",
         },
@@ -215,7 +215,9 @@ export default function Nodes({ config }: IProps) {
           ip={node.ip}
           statusText={node.statusText}
         />
-        {peers.length > 0 && <NodePeers peers={peers} />}
+        {peers.length > 0 && <NodePeers
+          ip={node.ip}
+          peers={peers} />}
       </Container>
     </>
   );

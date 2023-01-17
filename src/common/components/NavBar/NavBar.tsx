@@ -1,5 +1,5 @@
 
-import { Button, chakra, Divider, Flex, HStack } from "@chakra-ui/react";
+import { Button, chakra, Divider, Flex, HStack, Text } from "@chakra-ui/react";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
@@ -20,9 +20,17 @@ export default function NavBar() {
         transition={{ duration: 1 }}
       >
         <Flex w="100%" px="6" py="5" align="center" justify="space-between">
-          <a href="/"><QuorumIcon /></a>
+          <a href="/"><Flex w="100%" px="6" py="5" align="center" justify="flex-start">
+
+            <QuorumIcon />
+            <Text fontSize='2xl' fontWeight='bold' >Vishrambh Network</Text>
+
+          </Flex>
+          </a>
+
           {/* TODO: fix me up to avoid duplication of items  */}
-          <HStack spacing="5" display={{ base: "none", md: "flex" }}>
+          <HStack spacing="5" display={{ base: "none", lg: "flex" }}
+          position="relative" left="-6em">
             {NavItems.map((item, i) => (
               <Link key={i} href={"/" + item["label"].toLowerCase()} passHref>
                 <Button

@@ -11,7 +11,7 @@ export default function MobileNav() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef(null);
   return (
-    <Flex display={{ base: "flex", md: "none" }}>
+    <Flex display={{ base: "flex", lg: "none" }}>
       <Button ref={btnRef} onClick={onOpen}>
         <FontAwesomeIcon icon={faBars as IconProp} fontSize="20px" />
       </Button>
