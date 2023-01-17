@@ -105,6 +105,7 @@ export default function ExplorerBlocks({
                     title={'Block: ' + (blockData?.number ? parseInt(blockData?.number, 16) : 'Loading')}
                     config={config}
                     selectNodeHandler={handleSelectNode}
+                    maxW="90%"
                 />
                 {blockData ? <Box color="#000000" p={3} width="85%" margin="0 auto">
 

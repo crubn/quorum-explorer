@@ -100,6 +100,7 @@ export default function ExplorerBlocks({
                     title={'Transaction'}
                     config={config}
                     selectNodeHandler={handleSelectNode}
+                    maxW="90%"
                 />
                 {txnData ? <Box color="#000000" p={3} width="85%" margin="0 auto">
 
