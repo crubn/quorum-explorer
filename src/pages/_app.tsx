@@ -2,6 +2,7 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { createBreakpoints } from "@chakra-ui/theme-tools";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
+import { useEffect } from "react";
 import "../../styles/globals.css";
 import Layout from "../common/components/Misc/Layout";
 
@@ -22,6 +23,13 @@ function MyApp({ Component, pageProps, router }: AppProps) {
     }
   });
 
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'production') {
+      window.console.log = () => { }
+    }
+  }, [])
+
+
   return (
     <SessionProvider
       // Provider options are not required but can be useful in situations where
@@ -31,7 +39,7 @@ function MyApp({ Component, pageProps, router }: AppProps) {
       refetchOnWindowFocus={true}
     >
       <ChakraProvider theme={theme}>
-        <title>Quorum Explorer</title>
+        <title>Vishrambh Network</title>
         <Layout>
           <Component {...pageProps} />
         </Layout>

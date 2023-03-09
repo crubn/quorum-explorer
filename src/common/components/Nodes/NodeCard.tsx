@@ -15,7 +15,7 @@ interface IProps {
 
 export default function NodeCard({ title, text, icon, statusText }: IProps) {
   const links: any = {
-    Blocks: "/explorer",
+    Blocks: "/blocks",
     Peers: "#peers"
   }
   return (

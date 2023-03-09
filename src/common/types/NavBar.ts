@@ -16,17 +16,17 @@ export const NavItems: NavItem[] = [
   //   icon: faUsers
   // },
   {
-    label: 'Explorer',
+    label: 'Blocks',
     icon: faCompass,
   },
   {
     label: 'Transactions',
     icon: faCompass,
   },
-  {
-    label: 'Contracts',
-    icon: faFileAlt,
-  },
+  // {
+  //   label: 'Contracts',
+  //   icon: faFileAlt,
+  // },
   // {
   //   label: 'Wallets',
   //   icon: faWallet,

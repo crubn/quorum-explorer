@@ -1,17 +1,12 @@
 import {
-  Heading,
-  Container,
-  HStack,
-  Box,
-  Flex,
-  Select,
+  Box, Container, Flex, Heading, HStack, Select
 } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faSlidersH } from "@fortawesome/free-solid-svg-icons";
-import { QuorumConfig } from "../../types/QuorumConfig";
-import { getNodeKeys } from "../../lib/quorumConfig";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
+import { getNodeKeys } from "../../lib/quorumConfig";
+import { QuorumConfig } from "../../types/QuorumConfig";
 const MotionContainer = motion(Container);
 
 interface IProps {
@@ -19,6 +14,7 @@ interface IProps {
   config: QuorumConfig;
   selectNodeHandler: any;
   isLoading?: boolean;
+  maxW?: string;
 }
 
 export default function PageHeader(props: IProps) {
@@ -30,7 +26,7 @@ export default function PageHeader(props: IProps) {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.2 }}
-        maxW={{ base: "container.sm", md: "container.xl" }}
+        maxW={props.maxW ? props.maxW : { base: "container.sm", md: "container.xl" }}
       >
         <Flex
           flexDirection="row"

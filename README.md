@@ -33,7 +33,11 @@ It has not been designed for production use yet!
   
       docker-compose --env-file ./.env.production up -d
 
+Upon every change in config, run `docker-compose --env-file ./.env.production up -d --build`
 
+There are 2 places where config has to be updated.
+   - `src/config/config.json`
+   - `worker/config.json`
 ## Prerequisites
 
 - [Nodejs](https://nodejs.org/en/download/)

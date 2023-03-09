@@ -41,7 +41,7 @@ class TransactionsController {
         console.log('Stopping Polling');
         break;
       } else {
-        for (const node of this.nodes) {
+        for await(const node of this.nodes) {
           await this
               .manageBlockFetching(node);
         }
