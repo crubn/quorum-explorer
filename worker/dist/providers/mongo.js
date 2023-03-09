@@ -50,7 +50,6 @@ class MongoDB {
         });
     }
     static useDB(dbName) {
-        console.info(`Changed DB: ${dbName}`);
         return connection.useDb(dbName, { useCache: true });
     }
 }

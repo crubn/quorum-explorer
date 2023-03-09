@@ -28,16 +28,14 @@ class TransactionsController {
     }
     async init() {
         this.stopFlag = false;
+        console.log("Watching for blocks...");
         while (true) {
             if (this.stopFlag) {
                 console.log('Stopping Polling');
                 break;
             }
             else {
-                for (const node of this.nodes) {
-                    await this
-                        .manageBlockFetching(node);
-                }
+                await this.manageBlockFetching(this.nodes[0]);
                 await this.delay(10000);
             }
         }
@@ -46,7 +44,7 @@ class TransactionsController {
                * Fetch a block
               */
     async fetchBlock(url, data) {
-        return new Promise(async (resolve) => {
+        return new Promise(async (resolve, reject) => {
             // console.log('url,data', url, data);
             await axios({
                 method: 'post',
@@ -62,15 +60,16 @@ class TransactionsController {
                 httpAgent: keepAliveAgent,
                 httpsAgent: httpsKeepAliveAgent,
             }).then(function (response) {
-                console.log('FETCHED:', parseInt(response.data.result.number, 16));
                 resolve(response.data.result);
             }).catch(function (err) {
                 console.log('err fetching getBlockByNumber from blockchain:', err);
+                reject(err);
             });
         });
     }
     async manageBlockFetching(node) {
         let lastCheckedBlock = await NCX.getLastBlockVisited(node.name);
+        lastCheckedBlock = Number(lastCheckedBlock);
         await this.fetchBlock(node.rpcUrl, [
             'latest',
             true,

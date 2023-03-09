@@ -20,7 +20,6 @@ class NodesCollection {
               { upsert: true },
           )
           .then(() => {
-            console.info('Last block visited updated:', blockNumber);
             resolve(true);
           })
           .catch((error: any) => {
@@ -38,7 +37,6 @@ class NodesCollection {
       gNMIDB(conn)
           .findOne({ node })
           .then((doc: any) => {
-            console.info('Last block visited fetched');
             if (doc) {
               resolve(doc.lastBlockVisited);
             } else {

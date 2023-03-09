@@ -64,7 +64,6 @@ handler.get(async (req: any, res: any) => {
     ]);
 
     if (result) {
-      console.info('Fetched transactions from DB');
       const resp: any = {};
       for await (const doc of result) {
         resp.total = doc.count[0]?.count;
