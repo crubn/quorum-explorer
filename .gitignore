@@ -16,7 +16,7 @@ node_modules
 # production
 build
 dist
-
+/worker/dist
 # misc
 .lh/*
 .DS_Store

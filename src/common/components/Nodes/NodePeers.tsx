@@ -1,12 +1,16 @@
 import {
+  Button,
   Container,
-  Flex, Table,
+  Flex, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Table,
   TableCaption, TableContainer, Tbody,
-  Td, Text, Th, Thead, Tooltip, Tr, useToast
+  Td, Text, Th, Thead, Tooltip, Tr, useDisclosure, useToast
 } from "@chakra-ui/react";
+import axios from "axios";
 import { motion } from "framer-motion";
-import { copyToClipboard } from "../../Helpers";
+import getConfig from "next/config";
+import { useEffect, useState } from "react";
 
+const { publicRuntimeConfig } = getConfig();
 const MotionContainer = motion(Container);
 const MotionText = motion(Text);
 
@@ -17,6 +21,52 @@ interface IProps {
 
 export default function NodePeers({ ip, peers }: IProps) {
   const toast = useToast();
+  const [locations, setLocations] = useState<any>({})
+  const [selectedPeer, setSelectedPeer] = useState<any>("")
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const openModal = (peerUrl:string) => {
+    onOpen();
+    setSelectedPeer(peerUrl)
+  };
+  const closeModal = () => {
+    onClose();
+    setSelectedPeer("")
+  };
+
+  useEffect(() => {
+    const fn = async () => {
+      let locationsTemp: any = {}
+      for await (let peer of peers) {
+        if (!location[peer.ipAddress]) {
+          await axios({
+            method: "GET",
+            url: `/api/locationGetByIp?ip=${peer.ipAddress}`,
+            headers: {
+              "Content-Type": "application/json",
+            },
+            timeout: 10000,
+            baseURL: `${publicRuntimeConfig.QE_BASEPATH}`,
+          })
+            .then((res) => {
+              console.log('Locations response', res)
+              if (res?.data?.code === 0) {
+                locationsTemp[peer.ipAddress] = res?.data?.data
+              } else {
+                console.log(res?.data)
+              }
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        }
+      }
+
+      setLocations(locationsTemp)
+    };
+    fn();
+  }, [peers])
+
   return (
     <>
       <MotionContainer
@@ -41,10 +91,13 @@ export default function NodePeers({ ip, peers }: IProps) {
                   <Th width="20%">
                     Org ID
                   </Th>
+                  <Th width="40%">
+                    Location
+                  </Th>
                   <Th width="20%">
                     IP Address
                   </Th>
-                  <Th width="60%">
+                  <Th width="20%">
                     ENODE URL
                   </Th>
                   {/* <Th>
@@ -75,6 +128,21 @@ export default function NodePeers({ ip, peers }: IProps) {
                         </Tooltip>
                       </Td>
                       <Td>
+                        <Tooltip label={locations[peer.ipAddress]} placement="auto">
+                          <MotionText
+                            key={locations[peer.ipAddress]}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 1 }}
+                            end={{ opacity: 0 }}
+                            isTruncated
+                            fontWeight={peer.ipAddress === ip ? 'bold' : 'inherit'}
+                          >
+                            {locations[peer.ipAddress]}
+                          </MotionText>
+                        </Tooltip>
+                      </Td>
+                      <Td>
                         <Tooltip label={peer.ipAddress} placement="auto">
                           <MotionText
                             key={peer.ipAddress}
@@ -90,31 +158,10 @@ export default function NodePeers({ ip, peers }: IProps) {
                         </Tooltip>
                       </Td>
                       <Td>
-                        <Tooltip label={peer.url + " (click to copy)"} placement="auto">
-                          <MotionText
-                            key={peer.url}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 1 }}
-                            end={{ opacity: 0 }}
-                            isTruncated
-                            cursor="pointer"
-                            fontWeight={peer.ipAddress === ip ? 'bold' : 'inherit'}
-                            onClick={() => copyToClipboard(peer.url)
-                              .then(() => {
-                                toast({
-                                  title: 'Peer URL copied',
-                                  status: 'success',
-                                  duration: 2000,
-                                  isClosable: true,
-                                  position: "top"
-                                })
-                              })
-                            }
-                          >
-                            {peer.url}
-                          </MotionText>
-                        </Tooltip>
+                          <Button p={0} onClick={()=>openModal(peer.url)}
+                            aria-label={""} height="30px" width="100%">
+                            Show
+                          </Button>
                       </Td>
                       {/* <Td>
                           <Center>
@@ -159,6 +206,30 @@ export default function NodePeers({ ip, peers }: IProps) {
           </TableContainer>
         </Flex>
       </MotionContainer>
+
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        size="2xl"
+        closeOnOverlayClick={true}
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Enode Information</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text fontSize="xs" textAlign="left">
+              {selectedPeer}
+            </Text>
+            </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="brand" mr={3} onClick={closeModal}>
+              Close
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 }
