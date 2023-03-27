@@ -11,7 +11,7 @@ RUN npm install --legacy-peer-deps
 
 COPY tsconfig.json ./
 COPY . ./
-COPY prod.env ./.env
+COPY docker.env ./.env
 
 RUN npm run build
 
@@ -19,7 +19,6 @@ FROM node:16-slim
 
 WORKDIR /usr/app
 COPY package.json ./
-COPY config.json ./
 RUN npm install --production --legacy-peer-deps
 COPY --from=build /usr/app/dist dist
 

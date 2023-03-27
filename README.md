@@ -29,15 +29,13 @@ It has not been designed for production use yet!
    - Worker Server (This will run continuously to fetch the new transactions, every 10 seconds)
    - MongoDB Instance (This will store the transactions)
 
-- Use this command to start all three services together. They all use production env files.
+- Use this command to build all three services together. They all use production env files, to generate `docker.env` files.
   
-      docker-compose --env-file ./.env.production up -d
+      sh startDocker.sh --build
 
-Upon every change in config, run `docker-compose --env-file ./.env.production up -d --build`
+Upon every change in config, run `sh startDocker.sh`. It will update the env values.
 
-There are 2 places where config has to be updated.
-   - `src/config/config.json`
-   - `worker/config.json`
+Update the config file in `/config/config.json` in root folder. Make sure it is formatted in JSON format.
 ## Prerequisites
 
 - [Nodejs](https://nodejs.org/en/download/)
