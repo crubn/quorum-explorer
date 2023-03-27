@@ -1,8 +1,7 @@
-import fs from "fs";
 
-const defaultConfig = require("../../config/config.json");
+// const defaultConfig = require("../../config/config.json");
 
-export async function configReader() {
+export function configReader() {
   // if (process.env.QE_CONFIG_PATH) {
   //   const data = await fs.promises.readFile(
   //     `${process.env.QE_CONFIG_PATH}`,
@@ -10,6 +9,6 @@ export async function configReader() {
   //   );
   //   return data;
   // } else {
-    return JSON.stringify(defaultConfig);
+  return process.env.CONFIG_STRING ?? JSON.stringify({});
   // }
 }

@@ -1,17 +1,11 @@
 import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverBody,
-  PopoverArrow,
-  PopoverCloseButton,
-  Button,
-  Text,
+  Button, Modal, ModalBody, ModalCloseButton, ModalContent,
+  ModalHeader, Text
 } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faExpand } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
 import { QuorumTxn } from "../../types/Explorer";
 
 interface IProps {
@@ -19,19 +13,21 @@ interface IProps {
 }
 
 export default function ExplorerTxnDetails({ txn }: IProps) {
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <>
-      <Popover>
-        <PopoverTrigger>
-          <Button p={0} m={0}>
-            <FontAwesomeIcon icon={faExpand as IconProp} />
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent width="80vw">
-          <PopoverArrow />
-          <PopoverCloseButton />
-          <PopoverHeader>Txn: {txn.hash}</PopoverHeader>
-          <PopoverBody>
+      <Button p={0} m={0}
+        onClick={() => setIsOpen(!isOpen)}>
+        <FontAwesomeIcon icon={faExpand as IconProp} />
+      </Button>
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(!isOpen)}
+        size="4xl">
+
+        <ModalContent width="80vw">
+
+          <ModalCloseButton />
+          <ModalHeader>Txn: {txn.hash}</ModalHeader>
+          <ModalBody>
             <Text fontSize="xs" textAlign="left">
               Block Number:&nbsp; {txn.blockNumber}
             </Text>
@@ -62,9 +58,9 @@ export default function ExplorerTxnDetails({ txn }: IProps) {
             <Text fontSize="xs" textAlign="left">
               V:&nbsp; {txn.v}
             </Text>
-          </PopoverBody>
-        </PopoverContent>
-      </Popover>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 }

@@ -51,7 +51,7 @@ export async function deployContract(
   deployArgs: any
 ) {
   // Verify that privateUrl cannot be subject to a server-side request forgery
-  const getConf = JSON.parse(await configReader());
+  const getConf = JSON.parse(configReader());
   const rpcList = getConf.nodes.map((x: QuorumNode) => {
     return x.privateTxUrl;
   });
